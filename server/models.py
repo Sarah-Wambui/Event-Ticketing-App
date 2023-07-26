@@ -46,7 +46,7 @@ class Event(db.Model, SerializerMixin):
     def __repr__(self):
         return f"Event {self.title} will be held at {self.venue}"
     
-    print(date_time)
+    # print(date_time)
 
 class Ticket(db.Model, SerializerMixin):
     __tablename__ = "tickets"
