@@ -15,13 +15,16 @@ class User(db.Model, SerializerMixin):
 
     @hybrid_property
     def password_hash(self):
-        return AttributeError("Password should not be seen")
+        raise AttributeError("Password hashes may not be viewed.")
+    
     @password_hash.setter
     def password_hash(self, password):
         password_hash = bcrypt.generate_password_hash(password.encode("utf-8"))
         self._password_hash = password_hash.decode("utf-8")
+
     def authenticate(self, password):
-        return bcrypt.check_password_hash(self._password_hash, password.encode("utf-8"))
+        return bcrypt.check_password_hash(
+            self._password_hash, password.encode("utf-8"))
     
     def __repr__(self):
         return f"User {self.username}."
@@ -38,15 +41,14 @@ class Event(db.Model, SerializerMixin):
     image_url = db.Column(db.String)
     ticket_price = db.Column(db.Integer)
     available_tickets = db.Column(db.Integer)
-    date_time = db.Column(db.DateTime, server_default=db.func.now())
+    date_time = db.Column(db.String)
     # date_time = db.Column(db.DateTime, nullable=False, default=datetime.datetime.utcnow().strftime('%Y-%m-%d %I:%M '))
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     tickets = db.relationship("Ticket", backref="event")
 
     def __repr__(self):
         return f"Event {self.title} will be held at {self.venue}"
-    
-    print(date_time)
+
 
 class Ticket(db.Model, SerializerMixin):
     __tablename__ = "tickets"
@@ -67,7 +69,7 @@ class Purchase(db.Model, SerializerMixin):
     ticket_id = db.Column(db.Integer, db.ForeignKey("tickets.id"))
     user_id= db.Column(db.Integer, db.ForeignKey("users.id"))
     date_time = db.Column(db.DateTime, server_default=db.func.now())
-    payments = db.relationship("Payment", backref="purchase", uselist=False) 
+    payments = db.relationship("Payment", backref="purchase", uselist=False)
 
     def __repr__(self):
         return f"Purchase is {self.quantity_tickets}"
