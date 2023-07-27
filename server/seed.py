@@ -31,6 +31,7 @@ with app.app_context():
             image_url=rc(images),
             ticket_price=randint(500, 10000),
             available_tickets=randint(1, 50),
+            event_time =fake.date_time(),
             user_id=randint(1, 10)
         )
         events.append(event)
