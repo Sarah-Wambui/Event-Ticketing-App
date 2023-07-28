@@ -1,6 +1,6 @@
 from config import app, db, api
 from flask_restful import Resource
-from models import User, Event,Ticket,Payment
+from models import User, Event,Payment
 from flask import make_response, jsonify, request
 from sqlalchemy.exc import IntegrityError
 import datetime
@@ -111,6 +111,90 @@ class Events(Resource):
         db.session.commit()
         return make_response(jsonify(new_event.to_dict()), 201)
 api.add_resource(Events, "/events")
+
+class EventById(Resource):
+    def get(self, id):
+        event= Event.query.filter_by(id=id).first()
+        return make_response(jsonify(event.to_dict()), 200)
+    
+
+    def patch(self, id):
+        event= Event.query.filter_by(id=id).first()
+
+        for attr in request.form:
+            setattr(event, attr, request.form[attr])
+        db.session.add(event)
+        db.session.commit()
+
+        return make_response(jsonify(event.to_dict()), 200)
+    
+    def delete(self, id):
+        event = Event.query.filter_by(id = id).first()
+        db.session.delete(event)
+        db.session.commit()
+
+        return {}, 200
+
+api.add_resource(EventById, "/events/<int:id>") 
+
+class Tickets(Resource):
+    def get(self):
+        tickets = [ticket.to_dict() for ticket in Ticket.query.all()]
+        return make_response(jsonify(tickets), 200)
+    
+    def post(self):
+        data = request.get_json()
+
+        ticket = Ticket(
+            quantity_tickets = data["quantity_tickets"],
+            user_id= data["user_id"],
+            event_id = data["event_id"]
+        )
+        db.session.add(ticket)
+        db.session.commit()
+
+        return make_response(jsonify(ticket.to_dict()), 201)
+
+
+api.add_resource(Tickets, "/tickets")
+
+class TicketById(Resource):
+    def get(self, id):
+        tickets = Ticket.query.filter_by(id = id).first()
+        return make_response(jsonify(tickets.to_dict()), 200)
+    
+    def patch(self, id):
+        ticket = Ticket.query.filter_by(id = id).first()
+
+        for attr in request.form:
+            setattr(ticket, attr, request.form[attr])
+        db.session.add(ticket)
+        db.session.commit()
+
+        return make_response(jsonify(ticket.to_dict()), 200)
+
+api.add_resource(TicketById, "/tickets/<int:id>")
+
+class Payments(Resource):
+    def get(self):
+        payments = [payment.to_dict() for payment in Payment.query.all()]
+        return make_response(jsonify(payments), 200)
+    
+    def post(self):
+        data = request.get_json()
+        new_payment=Payment(
+            amount = data["amount"],
+            ticket_id = data["ticket_id"]
+        )
+        db.session.add(new_payment)
+        db.session.commit()
+
+        return make_response(jsonify(new_payment.to_dict()), 201)
+
+api.add_resource(Payments, "/payments")
+
+
+
 
 
 if __name__ == "__main__":

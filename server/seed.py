@@ -1,6 +1,6 @@
 from faker import Faker
 from app import app
-from models import User, Event,Ticket, Payment, event_users
+from models import User, Event, Payment, event_users
 from config import db
 from random import choice as rc, randint
 
@@ -8,7 +8,7 @@ fake = Faker()
 with app.app_context():
     User.query.delete()
     Event.query.delete()
-    Ticket.query.delete()
+    # Ticket.query.delete()
     Payment.query.delete()
     # Purchase.query.delete()
 
@@ -33,6 +33,8 @@ with app.app_context():
             image_url=rc(images),
             ticket_price=randint(500, 10000),
             available_tickets=randint(1, 50),
+            tickets_sold= randint(5, 20),
+            ticket_number=randint(1000, 20000),
             date_time =fake.date_time()
         )
         events.append(event)
@@ -50,43 +52,25 @@ with app.app_context():
     db.session.add_all(users)
 
 
-    tickets = []
+    payments = []
     for user in users:
         for n in range(10):
-            ticket = Ticket(
-            quantity_tickets = randint(5, 20),
+            payment = Payment(
+            amount=randint(1000, 10000),
             user_id=randint(1,10),
-            event_id=randint(1,10)
-        )
-        tickets.append(ticket)
-    db.session.add_all(tickets)
-
-    for event in events:
-        t = rc(tickets)
-        event.ticket = t
-        tickets.remove(t)
-
-
-    # purchases = []
-    # for n in range(10):
-    #     purchase = Purchase(
-    #         ticket_id=randint(1,10)
-    #     )
-    #     purchases.append(purchase)
-    # db.session.add_all(purchases)
-
-    payments = []
-    for n in range(10):
-        payment = Payment(
-            amount=randint(500, 10000),
-            ticket_id=randint(1,10)
+            event_id=randint(1, 10)
         )
         payments.append(payment)
     db.session.add_all(payments)
 
+    for event in events:
+        p = rc(payments)
+        event.payment = p
+        payments.remove(p)
+
     combinations = set()
     for _ in range(10):
-        user_id = randint(1, 5)
+        user_id = randint(1, 10)
         event_id = randint(1, 10)
         if (user_id, event_id) in combinations:
             continue
@@ -97,3 +81,26 @@ with app.app_context():
         db.session.commit()
     db.session.commit()
    
+
+
+
+       # tickets = []
+    # for user in users:
+    #     for n in range(10):
+    #         ticket = Ticket(
+    #         user_id=randint(1,10),
+    #         event_id=randint(1,10)
+    #     )
+    #     tickets.append(ticket)
+    # db.session.add_all(tickets)
+
+
+
+
+    # purchases = []
+    # for n in range(10):
+    #     purchase = Purchase(
+    #         ticket_id=randint(1,10)
+    #     )
+    #     purchases.append(purchase)
+    # db.session.add_all(purchases)
