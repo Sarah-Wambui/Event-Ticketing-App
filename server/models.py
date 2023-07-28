@@ -20,7 +20,7 @@ class User(db.Model, SerializerMixin):
     username = db.Column(db.String, nullable=False)
     email = db.Column(db.String, unique=True)
     _password_hash = db.Column(db.String, nullable=False)
-    tickets = db.relationship("Ticket", backref="user")
+    payments = db.relationship("Payment", backref="user")
 
     @hybrid_property
     def password_hash(self):
@@ -48,25 +48,13 @@ class Event(db.Model, SerializerMixin):
     image_url = db.Column(db.String)
     ticket_price = db.Column(db.Integer)
     available_tickets = db.Column(db.Integer)
+    tickets_sold = db.Column(db.Integer)
+    ticket_number = db.Column(db.Integer, unique=True)
     date_time = db.Column(db.DateTime, server_default=db.func.now())
-    tickets = db.relationship("Ticket", backref="event")
+    payments = db.relationship("Payment", backref="event")
 
     def __repr__(self):
         return f"Event {self.title} will be held at {self.venue}"
-
-
-class Ticket(db.Model, SerializerMixin):
-    __tablename__ = "tickets"
-    
-    id = db.Column(db.Integer, primary_key=True)
-    quantity_tickets = db.Column(db.Integer)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
-    serialize_rules = ("-user.tickets", "-event.tickets", "-payments.ticket",)
-
-
-    def __repr__(self):
-        return f"Ticket {self.id}" 
     
 
 class Payment(db.Model, SerializerMixin):
@@ -74,10 +62,24 @@ class Payment(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     amount = db.Column(db.Integer)
-    ticket_id = db.Column(db.Integer, db.ForeignKey("tickets.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
+    serialize_rule = ("-user.payments", "-event.payments",)
 
     def __repr__(self):
         return f"Payment {self.amount}"
+    
+# class Ticket(db.Model, SerializerMixin):
+#     __tablename__ = "tickets"
+    
+#     id = db.Column(db.Integer, primary_key=True)
+#     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+#     event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
+#     serialize_rules = ("-user.tickets", "-event.tickets", "-payments.ticket",)
+
+
+#     def __repr__(self):
+#         return f"Ticket {self.id}" 
     
 
 
