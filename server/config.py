@@ -9,6 +9,7 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = b'r\xdd\x9d0\x9e\x04O\x1b\x8f\xb7H\xa5\xe8\x87\xad\x99'
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///event.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATION"] = False
+app.config["SECRET_KEY"] = b"\x1c-\x93\xe2\xa2\xbdq\xe1\x8c\x9e\xcc\x06d\xd4\xac\x19"
 app.json.compact = False
 
 db = SQLAlchemy()

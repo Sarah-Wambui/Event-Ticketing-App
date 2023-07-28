@@ -1,6 +1,6 @@
 from config import app, db, api
 from flask_restful import Resource
-from models import User, Event, Ticket, Payment, Purchase
+from models import User, Event,Ticket,Payment
 from flask import make_response, jsonify, request
 from sqlalchemy.exc import IntegrityError
 import datetime
@@ -9,6 +9,7 @@ import jwt
 class Home(Resource):
     def get(self):
         return "message: Welcome to Event Ticketing"
+    
 api.add_resource(Home, "/")
 
 class Users(Resource):
@@ -16,6 +17,12 @@ class Users(Resource):
         users = [user.to_dict() for user in User.query.all()]
         return make_response(jsonify(users), 200)
 api.add_resource(Users, "/users")
+
+class UserById(Resource):
+    def get(self, id):
+        user = User.query.filter_by(id=id).first()
+        return make_response(jsonify(user.to_dict()), 200)
+api.add_resource(UserById, "/users/<int:id>")
 
 class SignUp(Resource):
     def post(self):
@@ -54,7 +61,6 @@ class Login(Resource):
 
         username = data.get("username")
         password = data.get("password")
-        # email = data.get("email")
 
         user = User.query.filter(User.username == username).first()
 
@@ -75,6 +81,36 @@ class Login(Resource):
         return make_response(jsonify({"error": "Invalid details"}), 401)
 
 api.add_resource(Login, "/login")
+
+
+class Events(Resource):
+    def get(self):
+        events = []
+
+        for event in Event.query.all():
+            getevent = event.to_dict()
+            events.append(getevent)
+        response = make_response(jsonify(events), 200)
+        return response
+    
+    def post(self):
+        events = request.get_json()
+        new_event= Event(
+            title=events["title"],
+            venue=events["venue"],
+            description= events["description"],
+            organizer=events["organizer"],
+            category =events["category"],
+            image_url = events["image_url"],
+            ticket_price=events["ticket_price"],
+            available_tickets=events["available_tickets"],
+            event_time=events["event_time"]
+        )
+        
+        db.session.add(new_event)
+        db.session.commit()
+        return make_response(jsonify(new_event.to_dict()), 201)
+api.add_resource(Events, "/events")
 
 
 if __name__ == "__main__":
