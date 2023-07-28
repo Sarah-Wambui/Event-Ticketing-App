@@ -64,7 +64,7 @@ class Payment(db.Model, SerializerMixin):
     amount = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
-    serialize_rule = ("-user.payments", "-event.payments",)
+    serialize_rules = ("-user.payments", "-event.payments",)
 
     def __repr__(self):
         return f"Payment {self.amount}"
