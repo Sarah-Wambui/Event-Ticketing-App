@@ -11,7 +11,7 @@ const EventItem = ({ event }) => {
             <img src={image_url} alt="poster" />
             <h4> Venue: {venue}</h4>
             <p> Description: {description}</p>
-            <p> Organzer: {organizer}</p>
+            <p> Organizer: {organizer}</p>
             <p>Category:{category}</p>
             <p>Ticket Price: {ticket_price}</p>
             <p> Available Tickets: {available_tickets}</p>
