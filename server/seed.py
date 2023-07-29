@@ -68,6 +68,7 @@ with app.app_context():
         event.payment = p
         payments.remove(p)
 
+
     combinations = set()
     for _ in range(10):
         user_id = randint(1, 10)

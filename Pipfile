@@ -12,6 +12,7 @@ flask-cors = "*"
 flask-bcrypt = "*"
 faker = "*"
 sqlalchemy-serializer = "*"
+pyjwt = "*"
 
 [dev-packages]
 
