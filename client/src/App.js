@@ -11,10 +11,11 @@ import AddEventForm from './components/AddEventForm';
 
 function App() {
   const[events, setEvents]= useState([])
-  console.log(events)
+  // console.log(events)
   
   useEffect(()=>{
-    fetch("http://127.0.0.1:5555/events")
+   
+    fetch("/events")
     .then(resp=> resp.json())
     .then(events=> setEvents(events))
   }, [])

@@ -3,7 +3,15 @@ import React from 'react'
 function Login() {
   return (
     <div>
-      hollo 1
+      <form>
+              <label> Email: </label>
+              <input type="email" />
+              <label> Password: </label>
+              <input type="password" />
+              <button type="submit">Login</button> 
+
+        
+      </form>
     </div>
   )
 }
