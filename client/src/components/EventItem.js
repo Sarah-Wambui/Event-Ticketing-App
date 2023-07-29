@@ -3,8 +3,8 @@ import React from 'react'
 
 
 const EventItem = ({ event }) => {
-    const { title, venue, description, organizer, image_url, category, ticket_price, available_tickets, tickets_sold, date_time } = event
-
+    const { title, venue, description, organizer, image_url, category, ticket_price, available_tickets,  date_time } = event
+    // tickets_sold,
     return (
         <div>
             <h3> Title:{title}</h3>

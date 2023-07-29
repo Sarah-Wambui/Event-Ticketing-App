@@ -1,20 +1,12 @@
-import React,{useState, useEffect} from 'react'
+import React,{useState} from 'react'
 
 function Signup() {
-    const [user, setUser]= useState({
-        username:"",
-        email:"",
-        password:"",
-    })
+    const [user, setUser]= useState(null)
+    const [username, setUsername] = useState("")
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    console.log(user)
 
-
-    function handleOnChange(event){
-        setUser({
-            ...user,
-            [event.target.name]:event.target.value,
-
-        })      
-    }
 
     function handleSubmit(e){
         e.preventDefault()
@@ -23,12 +15,16 @@ function Signup() {
             headers:{
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({user}),
+            body: JSON.stringify({
+              username, 
+              password, 
+              email,
+          }),
         }
         fetch("/signup", post)
         .then(resp=> resp.json())
-        .then(user => console.log(user))
-        .catch((error)=>{ console.error("error posting user", error)})
+        .then(user => setUser(user))
+        .catch((error)=>{ console.error("Error posting user", error)})
 
     }
 
@@ -38,13 +34,25 @@ function Signup() {
     <div>
      <form onSubmit={handleSubmit}>
         <h3> Sign Up Form</h3>
-              <label> Username: </label>
-             <input type="text" onChange={handleOnChange} name="username" value={user.username}/>
-              <label> Email: </label>
-              <input type="email" onChange={handleOnChange} name="email" value={user.email} />
-              <label> Password: </label>
-              <input type="password" onChange={handleOnChange} name= "password" value={user.password} />
-              <button type="submit">Sign Up</button>
+        <label htmlFor="username">Username:</label>
+            <input type="text" 
+            name="username" 
+            id="username" 
+            value={username} 
+            onChange={(e) => setUsername(e.target.value)} autoComplete='off' required />
+            <label htmlFor="email">Email:</label>
+            <input type="text" 
+            name="email" 
+            id="email" 
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)} autoComplete='off' required />
+            <label htmlFor="password">Password:</label>
+            <input type="password" 
+            name="password" 
+            id="password" 
+            value={password} 
+            onChange={(e) => setPassword(e.target.value)} required/>
+            <button type="submit">Sign Up</button>
         
         </form> 
     </div>
