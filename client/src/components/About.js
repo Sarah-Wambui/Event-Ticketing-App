@@ -1,11 +1,11 @@
 import React from 'react'
 
-function Signup() {
+function About() {
   return (
     <div>
-      hello 3
+      hello
     </div>
   )
 }
 
-export default Signup
+export default About
