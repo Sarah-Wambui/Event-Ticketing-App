@@ -5,7 +5,7 @@ const NavBar = () => {
     return (
 
         <nav>
-            <Link to='/'>Event</Link>
+            <Link to='/'><button>Event </button></Link>
             <Link to='/login'> Login</Link>
             <Link to='/signup'> SignUp</Link>
             <Link to='/newevent'> Create Event</Link>

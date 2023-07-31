@@ -26,7 +26,7 @@ function handleSubmitForm(event) {
 
   })
   .then((resp)=>resp.json())
-  .then((newEvent)=>console.log(newEvent))
+  .then((newEvent)=>handleAddEvent(newEvent))
   setEventData({
     title:"",
     venue:"",

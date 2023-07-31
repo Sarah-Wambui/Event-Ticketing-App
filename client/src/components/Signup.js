@@ -1,4 +1,6 @@
 import React,{useState} from 'react'
+// import{Link} from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 function Signup() {
     const [user, setUser]= useState(null)
@@ -6,6 +8,8 @@ function Signup() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     console.log(user)
+
+    const navigate =useNavigate()
 
 
     function handleSubmit(e){
@@ -23,9 +27,16 @@ function Signup() {
         }
         fetch("/signup", post)
         .then(resp=> resp.json())
-        .then(user => setUser(user))
-        .catch((error)=>{ console.error("Error posting user", error)})
-
+        .then((user) => {
+          setUser(user);
+          // Redirect to the login page after successful form submission
+          navigate("/login")
+        
+          // navigate.push("/login"); // Replace "/login" with the URL of your login page
+        })
+        .catch((error) => {
+          console.error("Error posting user", error);
+        });
     }
 
 
@@ -52,7 +63,7 @@ function Signup() {
             id="password" 
             value={password} 
             onChange={(e) => setPassword(e.target.value)} required/>
-            <button type="submit">Sign Up</button>
+        <button type="submit" >Sign Up</button>
         
         </form> 
     </div>
