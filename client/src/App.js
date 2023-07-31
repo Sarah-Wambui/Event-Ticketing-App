@@ -19,7 +19,9 @@ function App() {
     .then(resp=> resp.json())
     .then(events=> setEvents(events))
   }, [])
-
+function handleAddEvent(newEvent) {
+  setEvents([...events,newEvent])
+}
   
   return (
     <div className="App">
@@ -30,7 +32,7 @@ function App() {
           <Route exact path="/" element = {<EventList events={events}/>} />
           <Route path="/login" element={<Login  />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/newevent" element={<AddEventForm />} />
+          <Route path="/newevent" element={<AddEventForm handleAddEvent={handleAddEvent} />} />
           <Route path="/about" element={<About />} />
         </Routes>
 
