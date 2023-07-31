@@ -50,7 +50,7 @@ class Event(db.Model, SerializerMixin):
     available_tickets = db.Column(db.Integer)
     tickets_sold = db.Column(db.Integer)
     ticket_number = db.Column(db.Integer, unique=True)
-    date_time = db.Column(db.DateTime, server_default=db.func.now())
+    date_time = db.Column(db.String)
     payments = db.relationship("Payment", backref="event")
 
     def __repr__(self):

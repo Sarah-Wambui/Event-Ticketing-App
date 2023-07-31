@@ -104,3 +104,6 @@ with app.app_context():
     #     )
     #     purchases.append(purchase)
     # db.session.add_all(purchases)
+
+
+    # "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxNiwiZW1haWwiOiJzaGVlQGV4YW1wbGUuY29tIiwiZXhwIjoxNjkwNzkxMzIwfQ.nIhGNSLcwKQ-ImaUwFBWcCq8iB2-ju_V1OoWzs1fXcg"

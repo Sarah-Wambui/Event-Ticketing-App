@@ -4,7 +4,8 @@ from models import User, Event,Payment
 from flask import make_response, jsonify, request
 from sqlalchemy.exc import IntegrityError
 import datetime
-import jwt   
+from functools import wraps
+from flask_jwt_extended import create_access_token,get_jwt, get_jwt_identity, jwt_required  
 
 class Home(Resource):
     def get(self):
@@ -54,33 +55,31 @@ class SignUp(Resource):
             return {"error": "422 Unprocessable request"}, 422
 api.add_resource(SignUp, "/signup")
 
-
 class Login(Resource):
     def post(self):
         data = request.get_json()
 
-        username = data.get("username")
+        email = data.get("email")
         password = data.get("password")
 
-        user = User.query.filter(User.username == username).first()
+        user = User.query.filter(User.email == email).first()
 
         print("Get the token!")
 
         if user:
-            if user.authenticate(password):
-                payload = {
-                    "user_id": user.id,
-                    "username": user.username,
-                    "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=2)
-                }
-                token = jwt.encode(payload, app.config["SECRET_KEY"], algorithm="HS256")
-                print("we got the token!")
-                print({"token":token})
-                return  {"token": token}
-        print("Wrong details!")
+          if user.authenticate(password):
+            token = create_access_token(identity=user.id)
+            return jsonify(token=token)
         return make_response(jsonify({"error": "Invalid details"}), 401)
 
 api.add_resource(Login, "/login")
+
+
+class Protected(Resource):
+    @jwt_required()
+    def get(self):
+        return {"message": "This is only available for valid tokens."}, 200
+api.add_resource(Protected, "/protected")
 
 
 class Events(Resource):
@@ -93,6 +92,7 @@ class Events(Resource):
         response = make_response(jsonify(events), 200)
         return response
     
+    @jwt_required()
     def post(self):
         events = request.get_json()
         new_event= Event(
@@ -104,7 +104,7 @@ class Events(Resource):
             image_url = events["image_url"],
             ticket_price=events["ticket_price"],
             available_tickets=events["available_tickets"],
-            event_time=events["event_time"]
+            date_time=events["date_time"]
         )
         
         db.session.add(new_event)
@@ -137,43 +137,6 @@ class EventById(Resource):
 
 api.add_resource(EventById, "/events/<int:id>") 
 
-class Tickets(Resource):
-    def get(self):
-        tickets = [ticket.to_dict() for ticket in Ticket.query.all()]
-        return make_response(jsonify(tickets), 200)
-    
-    def post(self):
-        data = request.get_json()
-
-        ticket = Ticket(
-            quantity_tickets = data["quantity_tickets"],
-            user_id= data["user_id"],
-            event_id = data["event_id"]
-        )
-        db.session.add(ticket)
-        db.session.commit()
-
-        return make_response(jsonify(ticket.to_dict()), 201)
-
-
-api.add_resource(Tickets, "/tickets")
-
-class TicketById(Resource):
-    def get(self, id):
-        tickets = Ticket.query.filter_by(id = id).first()
-        return make_response(jsonify(tickets.to_dict()), 200)
-    
-    def patch(self, id):
-        ticket = Ticket.query.filter_by(id = id).first()
-
-        for attr in request.form:
-            setattr(ticket, attr, request.form[attr])
-        db.session.add(ticket)
-        db.session.commit()
-
-        return make_response(jsonify(ticket.to_dict()), 200)
-
-api.add_resource(TicketById, "/tickets/<int:id>")
 
 class Payments(Resource):
     def get(self):
