@@ -104,7 +104,7 @@ class Events(Resource):
             image_url = events["image_url"],
             ticket_price=events["ticket_price"],
             available_tickets=events["available_tickets"],
-            event_time=events["event_time"]
+            date_time=events["date_time"]
         )
         
         db.session.add(new_event)
