@@ -3,8 +3,7 @@ from flask_restful import Resource
 from models import User, Event,Payment
 from flask import make_response, jsonify, request
 from sqlalchemy.exc import IntegrityError
-import datetime
-import jwt   
+from flask_jwt_extended import create_access_token, jwt_required  
 
 class Home(Resource):
     def get(self):
@@ -59,28 +58,29 @@ class Login(Resource):
     def post(self):
         data = request.get_json()
 
-        username = data.get("username")
+        email = data.get("email")
         password = data.get("password")
 
-        user = User.query.filter(User.username == username).first()
+        user = User.query.filter(User.email == email).first()
 
         print("Get the token!")
 
         if user:
-            if user.authenticate(password):
-                payload = {
-                    "user_id": user.id,
-                    "username": user.username,
-                    "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=2)
-                }
-                token = jwt.encode(payload, app.config["SECRET_KEY"], algorithm="HS256")
-                print("we got the token!")
-                print({"token":token})
-                return  {"token": token}
-        print("Wrong details!")
+          if user.authenticate(password):
+            token = create_access_token(identity=user.id)
+            print({"token":token})
+            return jsonify(token=token)
         return make_response(jsonify({"error": "Invalid details"}), 401)
 
 api.add_resource(Login, "/login")
+
+
+class Protected(Resource):
+    @jwt_required()
+    def get(self):
+        return {"message": "This is only available for valid tokens."}, 200
+api.add_resource(Protected, "/protected")
+
 
 
 class Events(Resource):

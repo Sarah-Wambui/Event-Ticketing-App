@@ -13,6 +13,7 @@ flask-bcrypt = "*"
 faker = "*"
 sqlalchemy-serializer = "*"
 pyjwt = "*"
+flask-jwt-extended = "*"
 
 [dev-packages]
 
