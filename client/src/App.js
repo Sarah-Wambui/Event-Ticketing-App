@@ -8,6 +8,7 @@ import NavBar from './components/NavBar';
 import Header from './components/Header';
 import About from './components/About';
 import AddEventForm from './components/AddEventForm';
+import TicketCheckout from './components/TicketCheckout';
 
 function App() {
   const[events, setEvents]= useState([])
@@ -19,6 +20,10 @@ function App() {
     .then(resp=> resp.json())
     .then(events=> setEvents(events))
   }, [])
+  
+function handleAddEvent(newEvent) {
+  setEvents([...events,newEvent])
+}
 
   
   return (
@@ -30,8 +35,9 @@ function App() {
           <Route exact path="/" element = {<EventList events={events}/>} />
           <Route path="/login" element={<Login  />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/newevent" element={<AddEventForm />} />
+          <Route path="/newevent" element={<AddEventForm handleAddEvent={handleAddEvent} />} />
           <Route path="/about" element={<About />} />
+          <Route path="/checkout" element={<TicketCheckout events= {events} />} />
         </Routes>
 
       </main>

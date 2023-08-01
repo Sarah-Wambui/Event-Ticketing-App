@@ -1,4 +1,5 @@
 import React, {useState} from 'react'
+import {useNavigate} from "react-router-dom"
 
 
 function Login() {
@@ -7,6 +8,8 @@ function Login() {
   const [password, setPassword]=useState("")
 
   console.log(user)
+
+  const navigate= useNavigate()
 
   
   function handleSubmit(e){
@@ -21,9 +24,11 @@ function Login() {
     .then((r) =>{
       if (r.ok){
         r.json()
-        .then((user) => setUser(user))
+        .then((user) => {setUser(user)
+           navigate("/")})
+
       }else {
-        alert("Incorrect username or password!")
+        alert("Incorrect email or password!")
       }
     })
     .catch((error) => {
@@ -47,7 +52,7 @@ function Login() {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)} required/>
-              <button type="submit">Login</button>
+        <button type="submit"> Login </button>
       </form>
     </div>
   )

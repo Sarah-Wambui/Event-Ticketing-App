@@ -11,6 +11,8 @@ const EventList = ({ events }) => {
 
 
     )
+
+    
     return (
         <div>
             {fetchedEvent}

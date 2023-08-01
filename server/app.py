@@ -3,7 +3,6 @@ from flask_restful import Resource
 from models import User, Event,Payment
 from flask import make_response, jsonify, request
 from sqlalchemy.exc import IntegrityError
-import datetime
 from functools import wraps
 from flask_jwt_extended import create_access_token,get_jwt, get_jwt_identity, jwt_required  
 
@@ -69,6 +68,7 @@ class Login(Resource):
         if user:
           if user.authenticate(password):
             token = create_access_token(identity=user.id)
+            print({"token":token})
             return jsonify(token=token)
         return make_response(jsonify({"error": "Invalid details"}), 401)
 
