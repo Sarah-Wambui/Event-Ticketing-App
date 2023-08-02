@@ -4,6 +4,8 @@ from models import User, Event,Payment
 from flask import make_response, jsonify, request
 from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import create_access_token, jwt_required  
+from flask_mail import Message
+from config import mail
 
 class Home(Resource):
     def get(self):
@@ -45,9 +47,17 @@ class SignUp(Resource):
             db.session.add(user)
             db.session.commit()
 
+            msg = Message('Hello from the other side!',
+                 sender =   'rogonykiplagat@gmail.com', 
+                 recipients = [email])
+            msg.body = "Your account is created successfully"
+            mail.send(msg)
+            print("testing")
+            return "Message sent"
 
-            print(user.to_dict())
-            return make_response(jsonify(user.to_dict()), 201)
+
+            # print(user.to_dict())
+            # return make_response(jsonify(user.to_dict()), 201)
         except IntegrityError:
             print("no, here!")
             return {"error": "422 Unprocessable request"}, 422
