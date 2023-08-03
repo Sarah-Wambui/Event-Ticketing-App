@@ -6,6 +6,10 @@ from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import create_access_token, jwt_required  
 from flask_mail import Message
 from config import mail
+import requests
+from requests.auth import HTTPBasicAuth
+from datetime import datetime
+import base64
 
 class Home(Resource):
     def get(self):
@@ -210,7 +214,55 @@ class Payments(Resource):
 api.add_resource(Payments, "/payments")
 
 
-
+@app.route("/token")
+def token():
+    getAccesstoken()
+    return "ok"
+# initiate M-PESA Express
+@app.route("/pay")
+def MpesaExpress():
+    amount = request.args.get("amount")
+    phone = request.args.get("phone")
+    endpoint = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+    access_token = getAccesstoken()
+    print(access_token)
+    headers = { "Authorization": "Bearer %s" % access_token }
+    Timestamp = datetime.now()
+    times = Timestamp.strftime("%Y%m%d%H%M%S")
+    password = "174379" + "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919" + times
+    datapass = base64.b64encode(password.encode('utf-8')).decode('utf-8')
+    # my_endpoint = base_url + "/lnmo"
+    request_bin_url = "https://enjpdm47u3o7o.x.pipedream.net/lnmo"
+    data = {
+        "BusinessShortCode": "174379",
+        "Password": datapass,
+        "Timestamp": times,
+        "TransactionType": "CustomerPayBillOnline",
+        "PartyA": phone, # fill with your phone number
+        "PartyB": "174379",
+        "PhoneNumber": phone, # fill with your phone number
+        "CallBackURL": request_bin_url,
+        "AccountReference": "TestPay",
+        "TransactionDesc": "HelloTest",
+        "Amount": amount
+    }
+    res = requests.post(endpoint, json = data, headers = headers).json()
+    print(res)
+    return res
+@app.route('/lnmo', methods=['POST'])
+def incoming():
+    data = request.get_json()
+    print("Daraja")
+    print(data)
+    return "ok"
+@app.route("/access_token")
+def getAccesstoken():
+    consumer_key = 'i63wJ4CwjhfNcDuUVHQ7jx4YlymOhXC5'
+    consumer_secret = 'Gvf54kDwZN2a0gHf'
+    endpoint = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
+    data =(requests.get(endpoint, auth = HTTPBasicAuth(consumer_key, consumer_secret))).json()
+    print(data)
+    return data["access_token"]
 
 
 if __name__ == "__main__":

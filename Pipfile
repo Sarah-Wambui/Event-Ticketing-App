@@ -15,6 +15,7 @@ sqlalchemy-serializer = "*"
 pyjwt = "*"
 flask-jwt-extended = "*"
 flask-mail = "*"
+flask-swagger-ui = "*"
 
 [dev-packages]
 
