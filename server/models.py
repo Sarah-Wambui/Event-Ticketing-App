@@ -53,8 +53,6 @@ class Event(db.Model, SerializerMixin):
     tickets_sold = db.Column(db.Integer)
     ticket_number = db.Column(db.Integer, unique=True)
     date_time = db.Column(db.String)
-    
-    #one to many;
     payments = db.relationship("Payment", backref="event")
 
     def __repr__(self):
@@ -74,7 +72,7 @@ class Payment(db.Model, SerializerMixin):
     amount = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
-   
+    serialize_rules = ("-user.payments", "-event.payments",)
 
     def __repr__(self):
         return f"Payment {self.amount}"

@@ -1,8 +1,13 @@
+<<<<<<< HEAD
 import React from 'react';
+=======
+import React from 'react'
+>>>>>>> 930889a18f5d0707076b477b41487d72eb71fc3d
 
 function About() {
   return (
     <div>
+<<<<<<< HEAD
       <h2 style={{ fontWeight: 'bold' }}>About Us</h2>
       <p>
         Welcome to our event ticket app! Our app is designed to make event discovery and ticket purchasing a seamless and enjoyable experience for both event organizers and attendees.
@@ -30,3 +35,11 @@ function About() {
 }
 
 export default About;
+=======
+      hello
+    </div>
+  )
+}
+
+export default About
+>>>>>>> 930889a18f5d0707076b477b41487d72eb71fc3d
