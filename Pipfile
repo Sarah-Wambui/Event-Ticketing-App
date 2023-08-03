@@ -16,6 +16,8 @@ pyjwt = "*"
 flask-jwt-extended = "*"
 flask-mail = "*"
 flask-swagger-ui = "*"
+cloudinary = "*"
+requests = "*"
 
 [dev-packages]
 
