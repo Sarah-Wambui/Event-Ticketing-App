@@ -14,6 +14,7 @@ faker = "*"
 sqlalchemy-serializer = "*"
 pyjwt = "*"
 flask-jwt-extended = "*"
+flask-mail = "*"
 
 [dev-packages]
 
