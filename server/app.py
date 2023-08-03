@@ -104,18 +104,24 @@ class Events(Resource):
         return response
     
     def post(self):
-        events = request.get_json()
+        events = request.form
+        image_file = request.files.get("image")
+        # breakpoint()
+        print("Received Image File:", image_file)
         new_event= Event(
             title=events["title"],
             venue=events["venue"],
             description= events["description"],
             organizer=events["organizer"],
             category =events["category"],
-            image_url = events["image_url"],
+            # image_url = events["image_url"],
             ticket_price=events["ticket_price"],
             available_tickets=events["available_tickets"],
             date_time=events["date_time"]
         )
+
+        if image_file:
+            new_event.upload_image_to_cloudinary(image_file)
         
         db.session.add(new_event)
         db.session.commit()

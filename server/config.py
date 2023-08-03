@@ -6,6 +6,15 @@ from flask_migrate import Migrate
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 from flask_mail import Mail, Message
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+          
+cloudinary.config( 
+  cloud_name = "dp5j2kwic", 
+  api_key = "935297387295555", 
+  api_secret = "V_uF0qJJQR-qxTd5fboOVH0XMm8" 
+)
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = b'r\xdd\x9d0\x9e\x04O\x1b\x8f\xb7H\xa5\xe8\x87\xad\x99'
