@@ -2,7 +2,7 @@ from config import db, bcrypt, cloudinary
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy_serializer import SerializerMixin
 import datetime
-
+#many to many realtionship
 event_users = db.Table(
     "event_user",
     db.Column("user_id", db.ForeignKey("users.id"), primary_key=True),
@@ -13,15 +13,17 @@ event_users = db.Table(
 
 class User(db.Model, SerializerMixin):
     __tablename__ = "users"
-
-
     serialize_rules =("_password_hash", "-events.users",)
+    
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False)
     email = db.Column(db.String, unique=True)
     _password_hash = db.Column(db.String, nullable=False)
-    payments = db.relationship("Payment", backref="user")
-
+    
+    #one to many
+    payments = db.relationship("Payment", backref="user")  
+    
+    #password protection by encrypting it using the hybrid property decorator
     @hybrid_property
     def password_hash(self):
         raise AttributeError("Password hashes may not be viewed.")
@@ -37,8 +39,8 @@ class User(db.Model, SerializerMixin):
     
 class Event(db.Model, SerializerMixin):
     __tablename__ = "events"
-
     serialize_rules = ("-users.events",)
+    
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String)
     venue = db.Column(db.String)
@@ -51,6 +53,8 @@ class Event(db.Model, SerializerMixin):
     tickets_sold = db.Column(db.Integer)
     ticket_number = db.Column(db.Integer, unique=True)
     date_time = db.Column(db.String)
+    
+    #one to many;
     payments = db.relationship("Payment", backref="event")
 
     def __repr__(self):
@@ -61,15 +65,16 @@ class Event(db.Model, SerializerMixin):
         # breakpoint()
         self.image_url = response["secure_url"]
     
-
+#one to many with events table
 class Payment(db.Model, SerializerMixin):
     __tablename__ = "payments"
+    serialize_rules = ("-user.payments", "-event.payments",)
 
     id = db.Column(db.Integer, primary_key=True)
     amount = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
-    serialize_rules = ("-user.payments", "-event.payments",)
+   
 
     def __repr__(self):
         return f"Payment {self.amount}"

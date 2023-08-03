@@ -11,24 +11,30 @@ from requests.auth import HTTPBasicAuth
 from datetime import datetime
 import base64
 
+
+#Flask RESTful api 
+#our default endpoint
 class Home(Resource):
     def get(self):
         return "message: Welcome to Event Ticketing"
     
 api.add_resource(Home, "/")
 
+#Fetches all the users
 class Users(Resource):
     def get(self):
         users = [user.to_dict() for user in User.query.all()]
         return make_response(jsonify(users), 200)
 api.add_resource(Users, "/users")
 
+#Fetches our user by id
 class UserById(Resource):
     def get(self, id):
         user = User.query.filter_by(id=id).first()
         return make_response(jsonify(user.to_dict()), 200)
 api.add_resource(UserById, "/users/<int:id>")
 
+#creating a new user and email confirmation message
 class SignUp(Resource):
     def post(self):
         data = request.get_json()
@@ -67,7 +73,7 @@ class SignUp(Resource):
             return {"error": "422 Unprocessable request"}, 422
 api.add_resource(SignUp, "/signup")
 
-
+#authenticates our user according to valid credentials -jwt token
 class Login(Resource):
     def post(self):
         data = request.get_json()
@@ -89,14 +95,7 @@ class Login(Resource):
 api.add_resource(Login, "/login")
 
 
-class Protected(Resource):
-    @jwt_required()
-    def get(self):
-        return {"message": "This is only available for valid tokens."}, 200
-api.add_resource(Protected, "/protected")
-
-
-
+#Events endpoint GET & POST. Get fetches all events while POST creates a new event
 class Events(Resource):
     def get(self):
         events = []
@@ -107,6 +106,8 @@ class Events(Resource):
         response = make_response(jsonify(events), 200)
         return response
     
+#protected route using a valid token
+    @jwt_required()
     def post(self):
         events = request.form
         image_file = request.files.get("image")
@@ -132,6 +133,7 @@ class Events(Resource):
         return make_response(jsonify(new_event.to_dict()), 201)
 api.add_resource(Events, "/events")
 
+# GET fetches our event by id, PATCH updates details of an event, DELETE removes a single event 
 class EventById(Resource):
     def get(self, id):
         event= Event.query.filter_by(id=id).first()
@@ -155,65 +157,19 @@ class EventById(Resource):
 
         return {}, 200
 
-api.add_resource(EventById, "/events/<int:id>") 
-
-class Tickets(Resource):
-    def get(self):
-        tickets = [ticket.to_dict() for ticket in Ticket.query.all()]
-        return make_response(jsonify(tickets), 200)
-    
-    def post(self):
-        data = request.get_json()
-
-        ticket = Ticket(
-            quantity_tickets = data["quantity_tickets"],
-            user_id= data["user_id"],
-            event_id = data["event_id"]
-        )
-        db.session.add(ticket)
-        db.session.commit()
-
-        return make_response(jsonify(ticket.to_dict()), 201)
+api.add_resource(EventById, "/events/<int:id>")
 
 
-api.add_resource(Tickets, "/tickets")
+#Daraja API for payment module. get access token
 
-class TicketById(Resource):
-    def get(self, id):
-        tickets = Ticket.query.filter_by(id = id).first()
-        return make_response(jsonify(tickets.to_dict()), 200)
-    
-    def patch(self, id):
-        ticket = Ticket.query.filter_by(id = id).first()
-
-        for attr in request.form:
-            setattr(ticket, attr, request.form[attr])
-        db.session.add(ticket)
-        db.session.commit()
-
-        return make_response(jsonify(ticket.to_dict()), 200)
-
-api.add_resource(TicketById, "/tickets/<int:id>")
-
-class Payments(Resource):
-    def get(self):
-        payments = [payment.to_dict() for payment in Payment.query.all()]
-        return make_response(jsonify(payments), 200)
-    
-    def post(self):
-        data = request.get_json()
-        new_payment=Payment(
-            amount = data["amount"],
-            ticket_id = data["ticket_id"]
-        )
-        db.session.add(new_payment)
-        db.session.commit()
-
-        return make_response(jsonify(new_payment.to_dict()), 201)
-
-api.add_resource(Payments, "/payments")
-
-
+@app.route("/access_token")
+def getAccesstoken():
+    consumer_key = 'i63wJ4CwjhfNcDuUVHQ7jx4YlymOhXC5'
+    consumer_secret = 'Gvf54kDwZN2a0gHf'
+    endpoint = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
+    data =(requests.get(endpoint, auth = HTTPBasicAuth(consumer_key, consumer_secret))).json()
+    print(data)
+    return data["access_token"]
 @app.route("/token")
 def token():
     getAccesstoken()
@@ -232,7 +188,7 @@ def MpesaExpress():
     password = "174379" + "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919" + times
     datapass = base64.b64encode(password.encode('utf-8')).decode('utf-8')
     # my_endpoint = base_url + "/lnmo"
-    request_bin_url = "https://enjpdm47u3o7o.x.pipedream.net/lnmo"
+    request_bin_url = "https://en645apxpo0yy.x.pipedream.net/lnmo"
     data = {
         "BusinessShortCode": "174379",
         "Password": datapass,
@@ -252,18 +208,88 @@ def MpesaExpress():
 @app.route('/lnmo', methods=['POST'])
 def incoming():
     data = request.get_json()
-    print("Daraja")
     print(data)
-    return "ok"
-@app.route("/access_token")
-def getAccesstoken():
-    consumer_key = 'i63wJ4CwjhfNcDuUVHQ7jx4YlymOhXC5'
-    consumer_secret = 'Gvf54kDwZN2a0gHf'
-    endpoint = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
-    data =(requests.get(endpoint, auth = HTTPBasicAuth(consumer_key, consumer_secret))).json()
-    print(data)
-    return data["access_token"]
+    new_payment=Payment(
+        user_id=data["user_id"],
+        amount=data["amount"]
+        
+    )
+    db.session.add(new_payment)
+    db.session.commit()
+    
+    return jsonify(new_payment.to_dict()), 201
+
 
 
 if __name__ == "__main__":
     app.run(port=5555, debug=True)
+    
+    
+    
+    
+    
+# class Tickets(Resource):
+#     def get(self):
+#         tickets = [ticket.to_dict() for ticket in Ticket.query.all()]
+#         return make_response(jsonify(tickets), 200)
+    
+#     def post(self):
+#         data = request.get_json()
+
+#         ticket = Ticket(
+#             quantity_tickets = data["quantity_tickets"],
+#             user_id= data["user_id"],
+#             event_id = data["event_id"]
+#         )
+#         db.session.add(ticket)
+#         db.session.commit()
+
+#         return make_response(jsonify(ticket.to_dict()), 201)
+
+
+# api.add_resource(Tickets, "/tickets")
+
+# class TicketById(Resource):
+#     def get(self, id):
+#         tickets = Ticket.query.filter_by(id = id).first()
+#         return make_response(jsonify(tickets.to_dict()), 200)
+    
+#     def patch(self, id):
+#         ticket = Ticket.query.filter_by(id = id).first()
+
+#         for attr in request.form:
+#             setattr(ticket, attr, request.form[attr])
+#         db.session.add(ticket)
+#         db.session.commit()
+
+#         return make_response(jsonify(ticket.to_dict()), 200)
+
+# api.add_resource(TicketById, "/tickets/<int:id>")
+
+
+
+# class Protected(Resource):
+#     @jwt_required()
+#     def get(self):
+#         return {"message": "This is only available for valid tokens."}, 200
+# api.add_resource(Protected, "/protected")
+
+# class Payments(Resource):
+#     def get(self):
+#         payments = [payment.to_dict() for payment in Payment.query.all()]
+#         return make_response(jsonify(payments), 200)
+    
+#     def post(self):
+#         data = request.get_json()
+#         new_payment=Payment(
+#             amount = data["amount"],
+#             ticket_id = data["ticket_id"]
+#         )
+#         db.session.add(new_payment)
+#         db.session.commit()
+
+#         return make_response(jsonify(new_payment.to_dict()), 201)
+
+# api.add_resource(Payments, "/payments")
+
+
