@@ -3,6 +3,7 @@ import React from 'react'
 import Ticket from './Ticket'
 
 function TicketCheckout({events}) {
+    
 
     const ticket= events.map(( event)=>{
 
@@ -11,7 +12,11 @@ function TicketCheckout({events}) {
 
 
 return(
-    <div> {ticket}</div>
+    <div> 
+    {ticket}
+    
+    </div>
+    
 )
 
 }

@@ -1,7 +1,10 @@
 // import React from 'react'
 import React, { useState } from 'react'
+import { Link, useParams } from 'react-router-dom';
+
 
 function Ticket({ event }) {
+    const { eventId } = useParams();
  const{title, ticket_number, date_time, ticket_price }=event
     let [count, setCount] = useState(1);
     console.log(count)
@@ -22,6 +25,7 @@ function Ticket({ event }) {
     return (
         <div>
             <h3>Ticket Checkout</h3>
+            <h4>{eventId}</h4>
             <div>
 
                 <p>Event Name:{title} </p>
