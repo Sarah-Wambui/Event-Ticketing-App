@@ -4,8 +4,8 @@ import EventItem from "./EventItem"
 const EventList = ({ events }) => {
 
     const fetchedEvent = events.map((event) => (
-        // console.log(event)
-        <EventItem key={event.id} event={event} />
+        
+        <EventItem keyId={event.id} event={event} />
 
     )
 

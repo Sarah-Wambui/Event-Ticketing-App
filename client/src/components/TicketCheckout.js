@@ -7,7 +7,7 @@ function TicketCheckout({events}) {
 
     const ticket= events.map(( event)=>{
 
-        return <Ticket key = {event.id} event= {event} />
+        return <Ticket keyId = {event.id} event= {event} events={events}/>
     })
 
 

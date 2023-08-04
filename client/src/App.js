@@ -12,7 +12,7 @@ import TicketCheckout from './components/TicketCheckout';
 
 function App() {
   const[events, setEvents]= useState([])
-  console.log(events)
+  // console.log(events)
   
   useEffect(()=>{
    
@@ -33,12 +33,12 @@ function handleAddEvent(newEvent) {
       <main>
         <Routes>
           <Route exact path="/" element = {<EventList events={events}/>} />
-          <Route path="/:eventId" element= {<TicketCheckout/>} />
+          <Route path="/:eventId" element= {<TicketCheckout events= {events} />} />
           <Route path="/login" element={<Login  />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/newevent" element={<AddEventForm handleAddEvent={handleAddEvent} />} />
           <Route path="/about" element={<About />} />
-          <Route path="/checkout" element={<TicketCheckout events= {events} />} />
+          {/* <Route path="/checkout" element={<TicketCheckout events= {events} />} /> */}
         </Routes>
 
       </main>

@@ -1,13 +1,16 @@
 // import React from 'react'
 import React, { useState } from 'react'
-import { Link, useParams } from 'react-router-dom';
+
 
 
 function Ticket({ event }) {
-    const { eventId } = useParams();
+    // const { eventId } = useParams();
+    // console.log(eventId)
  const{title, ticket_number, date_time, ticket_price }=event
     let [count, setCount] = useState(1);
-    console.log(count)
+    // console.log(count)
+
+    
     
     function handleIncrement() {
         if (count < 10) {
@@ -25,7 +28,7 @@ function Ticket({ event }) {
     return (
         <div>
             <h3>Ticket Checkout</h3>
-            <h4>{eventId}</h4>
+            {/* <h4>{eventId}</h4> */}
             <div>
 
                 <p>Event Name:{title} </p>
