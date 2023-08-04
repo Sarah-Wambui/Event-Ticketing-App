@@ -9,6 +9,7 @@ import Header from './components/Header';
 import About from './components/About';
 import AddEventForm from './components/AddEventForm';
 import TicketCheckout from './components/TicketCheckout';
+import PaymentConfirmation from './components/PaymentConfirmation';
 
 function App() {
   const[events, setEvents]= useState([])
@@ -34,10 +35,14 @@ function handleAddEvent(newEvent) {
         <Routes>
           <Route exact path="/" element = {<EventList events={events}/>} />
           <Route path="/:eventId" element={<TicketCheckout events= {events} />} />
+          <Route path="/:id" element ={<TicketCheckout/> }/>
           <Route path="/login" element={<Login  />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/newevent" element={<AddEventForm handleAddEvent={handleAddEvent} />} />
           <Route path="/about" element={<About />} />
+
+          <Route path="/:id/checkout/:product" element={<PaymentConfirmation />} />
+          {/* <Route path="/checkout" element={<TicketCheckout events= {events} />} /> */}
         </Routes>
 
       </main>

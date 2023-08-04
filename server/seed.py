@@ -68,6 +68,7 @@ with app.app_context():
         event.payment = p
         payments.remove(p)
 
+
     combinations = set()
     for _ in range(10):
         user_id = randint(1, 10)
@@ -79,31 +80,4 @@ with app.app_context():
         statement = db.insert(event_users).values(event_user_data)
         db.session.execute(statement)
         db.session.commit()
-    db.session.commit()
    
-
-
-
-       # tickets = []
-    # for user in users:
-    #     for n in range(10):
-    #         ticket = Ticket(
-    #         user_id=randint(1,10),
-    #         event_id=randint(1,10)
-    #     )
-    #     tickets.append(ticket)
-    # db.session.add_all(tickets)
-
-
-
-
-    # purchases = []
-    # for n in range(10):
-    #     purchase = Purchase(
-    #         ticket_id=randint(1,10)
-    #     )
-    #     purchases.append(purchase)
-    # db.session.add_all(purchases)
-
-
-    # "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxNiwiZW1haWwiOiJzaGVlQGV4YW1wbGUuY29tIiwiZXhwIjoxNjkwNzkxMzIwfQ.nIhGNSLcwKQ-ImaUwFBWcCq8iB2-ju_V1OoWzs1fXcg"

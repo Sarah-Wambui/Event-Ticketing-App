@@ -1,8 +1,8 @@
-"""bg: removed ticket table
+"""create db
 
-Revision ID: 3dfb448c60e0
+Revision ID: ae049442de76
 Revises: 
-Create Date: 2023-07-28 21:45:45.398213
+Create Date: 2023-08-04 16:57:40.552165
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '3dfb448c60e0'
+revision = 'ae049442de76'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -30,7 +30,7 @@ def upgrade():
     sa.Column('available_tickets', sa.Integer(), nullable=True),
     sa.Column('tickets_sold', sa.Integer(), nullable=True),
     sa.Column('ticket_number', sa.Integer(), nullable=True),
-    sa.Column('date_time', sa.DateTime(), server_default=sa.text('(CURRENT_TIMESTAMP)'), nullable=True),
+    sa.Column('date_time', sa.String(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('ticket_number')
     )

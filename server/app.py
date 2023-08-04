@@ -3,27 +3,38 @@ from flask_restful import Resource
 from models import User, Event,Payment
 from flask import make_response, jsonify, request
 from sqlalchemy.exc import IntegrityError
-from functools import wraps
-from flask_jwt_extended import create_access_token,get_jwt, get_jwt_identity, jwt_required  
+from flask_jwt_extended import create_access_token, jwt_required  
+from flask_mail import Message
+from config import mail
+import requests
+from requests.auth import HTTPBasicAuth
+from datetime import datetime
+import base64
 
+
+#Flask RESTful api 
+#our default endpoint
 class Home(Resource):
     def get(self):
         return "message: Welcome to Event Ticketing"
     
 api.add_resource(Home, "/")
 
+#Fetches all the users
 class Users(Resource):
     def get(self):
         users = [user.to_dict() for user in User.query.all()]
         return make_response(jsonify(users), 200)
 api.add_resource(Users, "/users")
 
+#Fetches our user by id
 class UserById(Resource):
     def get(self, id):
         user = User.query.filter_by(id=id).first()
         return make_response(jsonify(user.to_dict()), 200)
 api.add_resource(UserById, "/users/<int:id>")
 
+#creating a new user and email confirmation message
 class SignUp(Resource):
     def post(self):
         data = request.get_json()
@@ -46,13 +57,22 @@ class SignUp(Resource):
             db.session.add(user)
             db.session.commit()
 
+            msg = Message('Hello from the other side!',
+                 sender =   'rogonykiplagat@gmail.com', 
+                 recipients = [email])
+            msg.body = "Your account is created successfully"
+            mail.send(msg)
+            print("testing")
+            return "Message sent"
 
-            print(user.to_dict())
-            return make_response(jsonify(user.to_dict()), 201)
+
+            # print(user.to_dict())
+            # return make_response(jsonify(user.to_dict()), 201)
         except IntegrityError:
             print("no, here!")
             return {"error": "422 Unprocessable request"}, 422
 api.add_resource(SignUp, "/signup")
+
 
 class Login(Resource):
     def post(self):
@@ -82,6 +102,7 @@ class Protected(Resource):
 api.add_resource(Protected, "/protected")
 
 
+#Events endpoint GET & POST. Get fetches all events while POST creates a new event
 class Events(Resource):
     def get(self):
         events = []
@@ -92,26 +113,32 @@ class Events(Resource):
         response = make_response(jsonify(events), 200)
         return response
     
-    @jwt_required()
     def post(self):
-        events = request.get_json()
+        events = request.form
+        image_file = request.files.get("image")
+        # breakpoint()
+        print("Received Image File:", image_file)
         new_event= Event(
             title=events["title"],
             venue=events["venue"],
             description= events["description"],
             organizer=events["organizer"],
             category =events["category"],
-            image_url = events["image_url"],
+            # image_url = events["image_url"],
             ticket_price=events["ticket_price"],
             available_tickets=events["available_tickets"],
             date_time=events["date_time"]
         )
+
+        if image_file:
+            new_event.upload_image_to_cloudinary(image_file)
         
         db.session.add(new_event)
         db.session.commit()
         return make_response(jsonify(new_event.to_dict()), 201)
 api.add_resource(Events, "/events")
 
+# GET fetches our event by id, PATCH updates details of an event, DELETE removes a single event 
 class EventById(Resource):
     def get(self, id):
         event= Event.query.filter_by(id=id).first()
@@ -135,7 +162,7 @@ class EventById(Resource):
 
         return {}, 200
 
-api.add_resource(EventById, "/events/<int:id>") 
+api.add_resource(EventById, "/events/<int:id>")
 
 
 class Payments(Resource):
@@ -161,4 +188,4 @@ api.add_resource(Payments, "/payments")
 
 
 if __name__ == "__main__":
-    app.run(port=5555, debug=True)
+    app.run(debug=True, port=5555)

@@ -1,7 +1,6 @@
 from config import db, bcrypt
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy_serializer import SerializerMixin
-import datetime
 
 event_users = db.Table(
     "event_user",
@@ -32,7 +31,7 @@ class User(db.Model, SerializerMixin):
     def authenticate(self, password):
         return bcrypt.check_password_hash(self._password_hash, password.encode("utf-8"))
     
-    def __repr__(self):
+    def _repr_(self):
         return f"User {self.username}."
     
 class Event(db.Model, SerializerMixin):
@@ -53,7 +52,7 @@ class Event(db.Model, SerializerMixin):
     date_time = db.Column(db.String)
     payments = db.relationship("Payment", backref="event")
 
-    def __repr__(self):
+    def _repr_(self):
         return f"Event {self.title} will be held at {self.venue}"
     
 
@@ -66,20 +65,8 @@ class Payment(db.Model, SerializerMixin):
     event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
     serialize_rules = ("-user.payments", "-event.payments",)
 
-    def __repr__(self):
+    def _repr_(self):
         return f"Payment {self.amount}"
-    
-# class Ticket(db.Model, SerializerMixin):
-#     __tablename__ = "tickets"
-    
-#     id = db.Column(db.Integer, primary_key=True)
-#     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-#     event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
-#     serialize_rules = ("-user.tickets", "-event.tickets", "-payments.ticket",)
-
-
-#     def __repr__(self):
-#         return f"Ticket {self.id}" 
     
 
 
