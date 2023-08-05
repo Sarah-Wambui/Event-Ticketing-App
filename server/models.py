@@ -19,6 +19,7 @@ class User(db.Model, SerializerMixin):
     username = db.Column(db.String, nullable=False)
     email = db.Column(db.String, unique=True)
     _password_hash = db.Column(db.String, nullable=False)
+    is_attendee = db.Column(db.Boolean, default=True)
     payments = db.relationship("Payment", backref="user")
 
     @hybrid_property
@@ -38,6 +39,7 @@ class Event(db.Model, SerializerMixin):
     __tablename__ = "events"
 
     serialize_rules = ("-users.events",)
+    
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String)
     venue = db.Column(db.String)
@@ -61,6 +63,7 @@ class Payment(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     amount = db.Column(db.Integer)
+    phone_number = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
     serialize_rules = ("-user.payments", "-event.payments",)
