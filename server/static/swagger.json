@@ -1,0 +1,545 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "EventGo API",
+      "version": "1.0.0",
+      "description": "An API to handle user registration, authentication, and Events CRUD."
+    },
+    "paths": {
+      "/signup": {
+        "post": {
+          "summary": "User signup",
+          "description": "Registers a new user.",
+          "tags": ["Authentication"],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "username": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string",
+                      "format": "email"
+                    },
+                    "phone_number": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["username", "password", "email", "phone_number"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "example": "Message sent"
+                }
+              }
+            },
+            "422": {
+              "description": "Unprocessable request",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": "422 Unprocessable request"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/login": {
+        "post": {
+          "summary": "User login",
+          "description": "Authenticates user and generates access token.",
+          "tags": ["Authentication"],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "format": "email"
+                    },
+                    "password": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["email", "password"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "token": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Invalid details",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": "Invalid details"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/events": {
+        "get": {
+          "summary": "Get all events",
+          "description": "Retrieve a list of all events.",
+          "tags": ["Events"],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Event"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "summary": "Create a new event",
+          "description": "Create a new event. (Requires authentication)",
+          "tags": ["Events"],
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewEvent"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Event"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": "Unauthorized"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/events/{id}": {
+        "get": {
+          "summary": "Get event by ID",
+          "description": "Retrieve an event by its ID.",
+          "tags": ["Events"],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "Event ID",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Event"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "patch": {
+          "summary": "Update event",
+          "description": "Update an event by its ID. (Requires authentication)",
+          "tags": ["Events"],
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "Event ID",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateEvent"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Event"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": "Unauthorized"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete event",
+          "description": "Delete an event by its ID. (Requires authentication)",
+          "tags": ["Events"],
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "Event ID",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success"
+            },
+            "401": {
+              "description": "Unauthorized",
+              "content": {
+                "application/json": {
+                  "example": {
+                    "error": "Unauthorized"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/users": {
+        "get": {
+          "summary": "Get all users",
+          "description": "Retrieve a list of all users.",
+          "tags": ["Users"],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/users/{id}": {
+        "get": {
+          "summary": "Get user by ID",
+          "description": "Retrieve a user by their ID.",
+          "tags": ["Users"],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "User ID",
+              "required": true,
+              "schema": {
+                "type": "integer"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/pay": {
+        "post": {
+          "summary": "Make a payment",
+          "description": "Initiate an M-PESA Express payment.",
+          "tags": ["Payments"],
+          "parameters": [
+            {
+              "name": "phone",
+              "in": "query",
+              "description": "Phone number of the payer",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "amount",
+              "in": "query",
+              "description": "Amount to be paid",
+              "required": true,
+              "schema": {
+                "type": "number",
+                "format": "float"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Success",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "MerchantRequestID": {
+                        "type": "string"
+                      },
+                      "CheckoutRequestID": {
+                        "type": "string"
+                      },
+                      "ResponseCode": {
+                        "type": "string"
+                      },
+                      "ResponseDescription": {
+                        "type": "string"
+                      },
+                      "CustomerMessage": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "User": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "username": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string",
+              "format": "email"
+            },
+            "phone_number": {
+              "type": "string"
+            }
+          }
+        },
+        "NewEvent": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "venue": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "organizer": {
+              "type": "string"
+            },
+            "category": {
+              "type": "string"
+            },
+            "image_url": {
+              "type": "string"
+            },
+            "ticket_price": {
+              "type": "number",
+              "format": "float"
+            },
+            "available_tickets": {
+              "type": "integer"
+            },
+            "date_time": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          "required": ["title", "venue", "description", "organizer", "category", "image_url", "ticket_price", "available_tickets", "date_time"]
+        },
+        "Event": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "title": {
+              "type": "string"
+            },
+            "venue": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "organizer": {
+              "type": "string"
+            },
+            "category": {
+              "type": "string"
+            },
+            "image_url": {
+              "type": "string"
+            },
+            "ticket_price": {
+              "type": "number",
+              "format": "float"
+            },
+            "available_tickets": {
+              "type": "integer"
+            },
+            "date_time": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "UpdateEvent": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "venue": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "organizer": {
+              "type": "string"
+            },
+            "category": {
+              "type": "string"
+            },
+            "image_url": {
+              "type": "string"
+            },
+            "ticket_price": {
+              "type": "number",
+              "format": "float"
+            },
+            "available_tickets": {
+              "type": "integer"
+            },
+            "date_time": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      },
+      "securitySchemes": {
+        "BearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
+    }
+  }
+  

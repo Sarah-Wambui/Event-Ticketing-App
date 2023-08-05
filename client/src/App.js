@@ -15,12 +15,12 @@ function App() {
   const[events, setEvents]= useState([])
   // console.log(events)
   
-  useEffect(()=>{
-   
+  useEffect(()=>{   
     fetch("/events")
     .then(resp=> resp.json())
     .then(events=> setEvents(events))
   }, [])
+
   
 function handleAddEvent(newEvent) {
   setEvents([...events,newEvent])
@@ -39,13 +39,9 @@ function handleAddEvent(newEvent) {
           <Route path="/signup" element={<Signup />} />
           <Route path="/newevent" element={<AddEventForm handleAddEvent={handleAddEvent} />} />
           <Route path="/about" element={<About />} />
-
           <Route path="/:id/checkout/:product" element={<PaymentConfirmation />} />
-          {/* <Route path="/checkout" element={<TicketCheckout events= {events} />} /> */}
         </Routes>
-
       </main>
- 
     </div>
   )
 }

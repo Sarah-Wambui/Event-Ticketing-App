@@ -80,9 +80,7 @@ function handlePrevStep(){
             <input type="text"onChange={handleChange} name ="category" value={eventData.category}/>
             <label> Organizer:</label>
             <input type="text"onChange={handleChange} name ="organizer" value={eventData.organizer}/>
-            <button type='button' onClick={handleNextStep}>
-              Next
-            </button>
+            <button type='button' onClick={handleNextStep}>Next</button>
           </form>
         </div>
       )}
@@ -96,12 +94,9 @@ function handlePrevStep(){
               <input type="text"onChange={handleChange} name ="image_url" value={eventData.image_url}/>
               <label> Available Tickets:</label>
               <input type="number"onChange={handleChange} name ="available_tickets" value={eventData.available_tickets}/>
-              <button type='button' onClick={handlePrevStep}>
-                Previous
-              </button>
-              <button type='button' onClick={handleNextStep}>
-                Next
-              </button>
+              <button type='button' onClick={handlePrevStep}>Previous</button>
+
+              <button type='button' onClick={handleNextStep}>Next</button>
             </form>
         </div>
       )}
