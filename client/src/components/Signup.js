@@ -1,5 +1,4 @@
 import React,{useState} from 'react'
-// import{Link} from "react-router-dom"
 import { useNavigate } from "react-router-dom"
 
 function Signup() {
@@ -7,9 +6,11 @@ function Signup() {
     const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+
     console.log(user)
 
     const navigate =useNavigate()
+
 
 
     function handleSubmit(e){
@@ -29,14 +30,8 @@ function Signup() {
         .then(resp=> resp.json())
         .then((user) => {
           setUser(user);
-          // Redirect to the login page after successful form submission
-          navigate("/login")
-        
-          // navigate.push("/login"); // Replace "/login" with the URL of your login page
-        })
-        .catch((error) => {
-          console.error("Error posting user", error);
-        });
+          navigate("/login")})
+        .catch((error) => {console.error("Error posting user", error)});
     }
 
 
