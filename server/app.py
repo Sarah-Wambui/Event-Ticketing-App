@@ -107,7 +107,7 @@ class Events(Resource):
         return response
     
 #protected route using a valid token
-    @jwt_required()
+    # @jwt_required()
     def post(self):
         events = request.form
         image_file = request.files.get("image")
@@ -162,49 +162,44 @@ api.add_resource(EventById, "/events/<int:id>")
 
 #Daraja API for payment module. get access token
 
-@app.route("/access_token")
-def getAccesstoken():
-    consumer_key = 'i63wJ4CwjhfNcDuUVHQ7jx4YlymOhXC5'
-    consumer_secret = 'Gvf54kDwZN2a0gHf'
-    endpoint = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
-    data =(requests.get(endpoint, auth = HTTPBasicAuth(consumer_key, consumer_secret))).json()
-    print(data)
-    return data["access_token"]
+
 @app.route("/token")
 def token():
     getAccesstoken()
     return "ok"
 # initiate M-PESA Express
-@app.route("/pay")
+@app.route("/pay",methods=["POST"])
 def MpesaExpress():
-    amount = request.args.get("amount")
-    phone = request.args.get("phone")
-    endpoint = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
-    access_token = getAccesstoken()
-    print(access_token)
-    headers = { "Authorization": "Bearer %s" % access_token }
-    Timestamp = datetime.now()
-    times = Timestamp.strftime("%Y%m%d%H%M%S")
-    password = "174379" + "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919" + times
-    datapass = base64.b64encode(password.encode('utf-8')).decode('utf-8')
-    # my_endpoint = base_url + "/lnmo"
-    request_bin_url = "https://en645apxpo0yy.x.pipedream.net/lnmo"
-    data = {
-        "BusinessShortCode": "174379",
-        "Password": datapass,
-        "Timestamp": times,
-        "TransactionType": "CustomerPayBillOnline",
-        "PartyA": phone, # fill with your phone number
-        "PartyB": "174379",
-        "PhoneNumber": phone, # fill with your phone number
-        "CallBackURL": request_bin_url,
-        "AccountReference": "TestPay",
-        "TransactionDesc": "HelloTest",
-        "Amount": amount
-    }
-    res = requests.post(endpoint, json = data, headers = headers).json()
-    print(res)
-    return res
+    if request.method == "POST":
+            data = request.get_json()
+            amount = data.get("amount")
+            phone = data.get("phone")
+            endpoint = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+            access_token = getAccesstoken()
+            print(access_token)
+            headers = { "Authorization": "Bearer %s" % access_token }
+            Timestamp = datetime.now()
+            times = Timestamp.strftime("%Y%m%d%H%M%S")
+            password = "174379" + "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919" + times
+            datapass = base64.b64encode(password.encode('utf-8')).decode('utf-8')
+            # my_endpoint = base_url + "/lnmo"
+            request_bin_url = "https://en645apxpo0yy.x.pipedream.net/lnmo"
+            data = {
+                "BusinessShortCode": "174379",
+                "Password": datapass,
+                "Timestamp": times,
+                "TransactionType": "CustomerPayBillOnline",
+                "PartyA": phone, # fill with your phone number
+                "PartyB": "174379",
+                "PhoneNumber": phone, # fill with your phone number
+                "CallBackURL": request_bin_url,
+                "AccountReference": "TestPay",
+                "TransactionDesc": "HelloTest",
+                "Amount": amount
+            }
+            res = requests.post(endpoint, json = data, headers = headers).json()
+            print(res)
+            return res
 @app.route('/lnmo', methods=['POST'])
 def incoming():
     data = request.get_json()
@@ -218,6 +213,14 @@ def incoming():
     db.session.commit()
     
     return jsonify(new_payment.to_dict()), 201
+@app.route("/access_token")
+def getAccesstoken():
+    consumer_key = 'i63wJ4CwjhfNcDuUVHQ7jx4YlymOhXC5'
+    consumer_secret = 'Gvf54kDwZN2a0gHf'
+    endpoint = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
+    data =(requests.get(endpoint, auth = HTTPBasicAuth(consumer_key, consumer_secret))).json()
+    print(data)
+    return data["access_token"]
 
 
 
@@ -289,6 +292,8 @@ if __name__ == "__main__":
 #         db.session.commit()
 
 #         return make_response(jsonify(new_payment.to_dict()), 201)
+
+# api.add_resource(Payments, "/payments")
 
 # api.add_resource(Payments, "/payments")
 

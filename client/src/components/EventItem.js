@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React from 'react'
 // import TicketCheckout from './TicketCheckout'
 // import {  Routes, Route,Link} from 'react-router-dom'
 import { Link } from 'react-router-dom'
@@ -8,23 +8,6 @@ import { Link } from 'react-router-dom'
 const EventItem = ({ event }) => {
     const {id, title, venue, description, organizer, image_url, category, ticket_price, available_tickets,  date_time } = event
     // tickets_sold,
-
-    const [selectedEvent, setSelectedEvent] = useState(null);
-
-    // const navigate= useNavigate()
-    useEffect(() => {
-
-        fetch(`/events/${id}`)
-            .then(resp => resp.json())
-            .then(events => setSelectedEvent(events))
-    }, [id])
-
-    function handleBuyTicket(id){
-        
-        console.log(selectedEvent)
-    }
-
-
 
     return (
         <div>
@@ -44,7 +27,7 @@ const EventItem = ({ event }) => {
                     <Route path="/checkout" element={<TicketCheckout />}/>
 
                 </Routes> */}
-                <Link to ="/checkout" > <button id="buy" onClick={handleBuyTicket} > Buy Ticket </button></Link>
+                <Link to ={`/${id}` }> <button id="buy"  > Buy Ticket </button></Link>
             </div>
 
             

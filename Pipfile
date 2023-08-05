@@ -12,12 +12,8 @@ flask-cors = "*"
 flask-bcrypt = "*"
 faker = "*"
 sqlalchemy-serializer = "*"
-pyjwt = "*"
 flask-jwt-extended = "*"
 flask-mail = "*"
-flask-swagger-ui = "*"
-cloudinary = "*"
-requests = "*"
 
 [dev-packages]
 
