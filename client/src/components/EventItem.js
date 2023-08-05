@@ -1,6 +1,4 @@
 import React from 'react'
-// import TicketCheckout from './TicketCheckout'
-// import {  Routes, Route,Link} from 'react-router-dom'
 import { Link } from 'react-router-dom'
 
 
@@ -22,19 +20,8 @@ const EventItem = ({ event }) => {
             <p> Remaining Tickets: </p>
             <p>Event Time: {date_time}</p>
             <div>
-                
-                {/* <Routes>
-                    <Route path="/checkout" element={<TicketCheckout />}/>
-
-                </Routes> */}
                 <Link to ={`/${id}` }> <button id="buy"  > Buy Ticket </button></Link>
             </div>
-
-            
-
-            
-
-
         </div>
     )
 }

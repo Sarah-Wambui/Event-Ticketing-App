@@ -2,8 +2,9 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 const NavBar = () => {
-    return (
 
+    
+    return (
         <nav>
             <Link to='/'><button>Event </button></Link>
             <Link to='/login'> Login</Link>
