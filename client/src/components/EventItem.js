@@ -22,7 +22,8 @@ const EventItem = ({ user, event, setEvents, events }) => {
             setEvents(updatedEvents)
         })
     }
-
+    
+    
 
 
     return (
