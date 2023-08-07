@@ -22,7 +22,8 @@ const EventItem = ({ user, event, setEvents, events }) => {
             setEvents(updatedEvents)
         })
     }
-
+    
+    
 
 
     return (
@@ -39,7 +40,7 @@ const EventItem = ({ user, event, setEvents, events }) => {
             <p>Event Time: {date_time}</p>
             <div>
 
-                {user === user_id ? (<> <Link to={`/${id}/update`} ><button >Update</button></Link> <button onClick={() => handleDelete(id)}>Delete</button> </>) :  (<Link to ={`/${id}` }> <button id="buy"  > Buy Ticket </button></Link> )}
+                {user === user_id ? (<> <Link to={{ pathname: `/${id}/update`, state: { event } }}><button >Update</button></Link> <button onClick={() => handleDelete(id)}>Delete</button> </>) :  (<Link to ={`/${id}` }> <button id="buy"  > Buy Ticket </button></Link> )}
                 
                 {/*  */}
             </div>

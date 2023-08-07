@@ -16,8 +16,7 @@ function Login({onLogin}) {
   const navigateToNewEvent = () => {
     navigate('/');
   };
-
-
+   
   
   function handleSubmit(e){
     e.preventDefault()
@@ -31,7 +30,7 @@ function Login({onLogin}) {
     .then((r) =>{
       if (r.ok){
         r.json()
-        .then((data) => { console.log(data)
+        .then((data) => {
           onLogin(data)
           navigateToNewEvent()
       })
