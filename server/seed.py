@@ -1,6 +1,6 @@
 from faker import Faker
 from app import app
-from models import User, Event, Payment, event_users
+from models import User, Event, Ticket
 from config import db
 from random import choice as rc, randint
 
@@ -8,9 +8,12 @@ fake = Faker()
 with app.app_context():
     User.query.delete()
     Event.query.delete()
-    # Ticket.query.delete()
-    Payment.query.delete()
+    Ticket.query.delete()
+    # Payment.query.delete()
     # Purchase.query.delete()
+
+    print("Start seeding here...")
+    print("seed events ")
 
     events = []
     images = [
@@ -33,14 +36,16 @@ with app.app_context():
             image_url=rc(images),
             ticket_price=randint(500, 10000),
             available_tickets=randint(1, 50),
-            tickets_sold= randint(5, 20),
-            ticket_number=randint(1000, 20000),
-            date_time =fake.date_time()
+            tickets_sold= randint(5, 20),          
+            date_time =fake.date_time(),
+            user_id=randint(1, 10)
         )
         events.append(event)
     db.session.add_all(events)
 
+     # ticket_number=randint(1000, 20000),
 
+    print("seed users ")
     users = []
     for n in range(10):
         user = User(
@@ -51,34 +56,35 @@ with app.app_context():
         users.append(user)
     db.session.add_all(users)
 
-
-    payments = []
+    print("seed ticket")
+    tickets = []
     for user in users:
         for n in range(10):
-            payment = Payment(
+            ticket = Ticket(
             amount=randint(1000, 10000),
             phone_number = fake.phone_number(),
+            ticket_number=randint(1, 20),
             user_id=randint(1,10),
             event_id=randint(1, 10)
         )
-        payments.append(payment)
-    db.session.add_all(payments)
+        tickets.append(ticket)
+    db.session.add_all(tickets)
 
     for event in events:
-        p = rc(payments)
-        event.payment = p
-        payments.remove(p)
+        p = rc(tickets)
+        event.ticket = p
+        tickets.remove(p)
 
 
-    combinations = set()
-    for _ in range(10):
-        user_id = randint(1, 10)
-        event_id = randint(1, 10)
-        if (user_id, event_id) in combinations:
-            continue
-        combinations.add((user_id, event_id))
-        event_user_data = {"user_id": user_id, "event_id": event_id}
-        statement = db.insert(event_users).values(event_user_data)
-        db.session.execute(statement)
+    # combinations = set()
+    # for _ in range(10):
+    #     user_id = randint(1, 10)
+    #     event_id = randint(1, 10)
+    #     if (user_id, event_id) in combinations:
+    #         continue
+    #     combinations.add((user_id, event_id))
+    #     event_user_data = {"user_id": user_id, "event_id": event_id}
+    #     statement = db.insert(event_users).values(event_user_data)
+    #     db.session.execute(statement)
         db.session.commit()
    

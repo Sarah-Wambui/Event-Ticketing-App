@@ -1,11 +1,11 @@
 import React from 'react'
 import EventItem from "./EventItem"
 
-const EventList = ({ events }) => {
+const EventList = ({ events , user, setEvents}) => {
 
-    const fetchedEvent = events.map((event) => (
+    const fetchedEvent = events.map((event, index) => (
         // console.log(event)
-        <EventItem key={event.id} event={event} />
+        <EventItem key={index} event={event} user={user} setEvents={setEvents} events={events} />
     ))
 
     
