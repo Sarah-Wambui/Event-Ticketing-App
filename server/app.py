@@ -160,7 +160,10 @@ class EventById(Resource):
 
     @jwt_required()
     def patch(self, id):
-        event= Event.query.filter_by(id=id).first()
+        # event= Event.query.filter_by(id=id).first()
+        event = Event.query.get(id)
+        data = request.get_json()
+
 
         current_user_id = get_jwt_identity() 
         user = User.query.get(current_user_id)
@@ -168,8 +171,8 @@ class EventById(Resource):
             user.is_attendee = False
             db.session.commit() 
 
-        for attr in request.form:
-            setattr(event, attr, request.form[attr])
+        for attr in data:
+            setattr(event, attr, data[attr])
         db.session.add(event)
         db.session.commit()
 

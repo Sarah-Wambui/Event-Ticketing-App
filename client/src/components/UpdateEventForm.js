@@ -21,7 +21,7 @@ function UpdateEventForm({setEvents, events}) {
 
 
   const {id} = useParams()
-  // console.log(id)
+  console.log(id)
 
   function handleSubmitForm(event){
     event.preventDefault()
@@ -34,7 +34,13 @@ function UpdateEventForm({setEvents, events}) {
       body:JSON.stringify(eventData),
     })
     .then((resp) => resp.json())
-    .then((updatedEvent) => console.log(updatedEvent))
+    .then((updatedEvent) => {
+      const updatedEvents = events.map((event)=>{
+        if(event.id === updatedEvent.id) return updatedEvent
+        return event
+      })
+      setEvents(updatedEvents)
+    })
   }
 
 
