@@ -1,6 +1,6 @@
 from config import app, db, api
 from flask_restful import Resource
-from models import User, Event, Ticket
+from models import User, Event, Ticket, Upload
 from flask import make_response, jsonify, request
 from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import create_access_token, jwt_required , get_jwt_identity , get_jwt
@@ -11,14 +11,17 @@ from requests.auth import HTTPBasicAuth
 from datetime import datetime
 import base64
 import cloudinary
+import cloudinary.uploader
+import os
+from flask_cors import  cross_origin
+
 
           
 cloudinary.config( 
-  cloud_name = "degeu8i1o", 
+  cloud_name = "eventgo", 
   api_key = "416435438684123", 
   api_secret = "dX_5_uw8boFR9DFi94aolYCiRCw" 
 )
-
 
 
 class Home(Resource):
@@ -140,16 +143,32 @@ class Events(Resource):
             description= events["description"],
             organizer=user.username,
             category =events["category"],
-            image_url = events["image_url"],
+            # image_url = events["image_url"],
             ticket_price=events["ticket_price"],
             available_tickets=events["available_tickets"],
             date_time=events["date_time"],
             user_id=current_user_id,
         )
+
         db.session.add(new_event)
         db.session.commit()
         return make_response(jsonify(new_event.to_dict()), 201)
 api.add_resource(Events, "/events")
+
+
+@app.route("/upload", methods=['POST'])
+@cross_origin()
+def upload_file():
+  if request.method == 'POST':
+    file_to_upload = request.files['file']
+    app.logger.info('%s file_to_upload', file_to_upload)
+
+    if file_to_upload:
+      upload_result = cloudinary.uploader.upload(file_to_upload)
+      app.logger.info(upload_result)
+      
+      return jsonify(upload_result)
+
 
 
 class EventById(Resource):
@@ -160,7 +179,10 @@ class EventById(Resource):
 
     @jwt_required()
     def patch(self, id):
-        event= Event.query.filter_by(id=id).first()
+        # event= Event.query.filter_by(id=id).first()
+        event = Event.query.get(id)
+        data = request.get_json()
+
 
         current_user_id = get_jwt_identity() 
         user = User.query.get(current_user_id)
@@ -168,8 +190,8 @@ class EventById(Resource):
             user.is_attendee = False
             db.session.commit() 
 
-        for attr in request.form:
-            setattr(event, attr, request.form[attr])
+        for attr in data:
+            setattr(event, attr, data[attr])
         db.session.add(event)
         db.session.commit()
 

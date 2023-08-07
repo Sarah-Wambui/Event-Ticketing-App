@@ -53,7 +53,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/about" element={<About />} />
           <Route path="/:id/checkout/:product" element={<PaymentConfirmation />} />
-          <Route path="/:id/update/:events"  element={<UpdateEventForm events={events} setEvents={setEvents}/>}/>
+          <Route path="/:id/update"  element={<UpdateEventForm events={events} setEvents={setEvents} />}/>
         </Routes>
       </main>
     </div>
