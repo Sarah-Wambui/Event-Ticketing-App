@@ -21,7 +21,7 @@ function UpdateEventForm({setEvents, events}) {
 
 
   const {id} = useParams()
-  // console.log(id)
+  // console.log(events)
 
   function handleSubmitForm(event){
     event.preventDefault()

@@ -39,7 +39,7 @@ const EventItem = ({ user, event, setEvents, events }) => {
             <p>Event Time: {date_time}</p>
             <div>
 
-                {user === user_id ? (<> <Link to={`/${id}/update`} ><button >Update</button></Link> <button onClick={() => handleDelete(id)}>Delete</button> </>) :  (<Link to ={`/${id}` }> <button id="buy"  > Buy Ticket </button></Link> )}
+                {user === user_id ? (<> <Link to={`/${id}/update/${events}`} ><button >Update</button></Link> <button onClick={() => handleDelete(id)}>Delete</button> </>) :  (<Link to ={`/${id}` }> <button id="buy"  > Buy Ticket </button></Link> )}
                 
                 {/*  */}
             </div>
