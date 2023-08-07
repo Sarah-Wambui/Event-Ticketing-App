@@ -1,6 +1,6 @@
 from config import app, db, api
 from flask_restful import Resource
-from models import User, Event, Ticket, Upload
+from models import User, Event, Ticket
 from flask import make_response, jsonify, request
 from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import create_access_token, jwt_required , get_jwt_identity , get_jwt
@@ -12,8 +12,8 @@ from datetime import datetime
 import base64
 import cloudinary
 import cloudinary.uploader
-import os
 from flask_cors import  cross_origin
+from datetime import timedelta
 
 
           
@@ -99,6 +99,7 @@ class Login(Resource):
                 "is_attendee": user.is_attendee,
                 "username": user.username
             }
+            # expires = timedelta(seconds=10)
             token = create_access_token(identity=user.id , additional_claims=metadata)
             print({"token":token})
             return jsonify({"token":token, "user_id":user.id})
@@ -143,7 +144,7 @@ class Events(Resource):
             description= events["description"],
             organizer=user.username,
             category =events["category"],
-            # image_url = events["image_url"],
+            image_url = events["image_url"],
             ticket_price=events["ticket_price"],
             available_tickets=events["available_tickets"],
             date_time=events["date_time"],

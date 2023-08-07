@@ -1,11 +1,15 @@
 import React,{useState} from 'react'
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 
 
 function UpdateEventForm({setEvents, events}) {
   const [step, setStep] = useState(1);
+  const {id} = useParams()
+  const location = useLocation();
+  const event = location.state && location.state.event
+  console.log(event)
   const [eventData, setEventData] = useState({
-    title:"",
+    title: "",
     venue:"",
     description:"",
     category:"",
@@ -20,7 +24,7 @@ function UpdateEventForm({setEvents, events}) {
   // console.log(eventData)  
 
 
-  const {id} = useParams()
+ 
   console.log(id)
 
   function handleSubmitForm(event){
