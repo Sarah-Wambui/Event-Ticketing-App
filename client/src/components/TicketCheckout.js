@@ -45,7 +45,7 @@ function TicketCheckout() {
                 <button onClick={handleDecrement}><span> - </span></button>
             </div>
             <div>
-                <img src="" alt="poster" />
+                <img src={checkout.image_url} alt="poster" />
                 <h5>Order Summary</h5>
                 <p>{count} * {checkout.ticket_price}: </p>
                 <p>Total: {product}</p>

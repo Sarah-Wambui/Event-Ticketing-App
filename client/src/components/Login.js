@@ -2,14 +2,21 @@ import React, {useState} from 'react'
 import {useNavigate} from "react-router-dom"
 
 
-function Login() {
-  const [user, setUser]= useState(null)
+function Login({onLogin}) {
+  // const [user, setUser]= useState(null)
   const [email, setEmail]=useState("")
   const [password, setPassword]=useState("")
+  // console.log(setUser)
 
-  console.log(user)
+
+  // console.log(user)
 
   const navigate= useNavigate()
+
+  const navigateToNewEvent = () => {
+    navigate('/');
+  };
+
 
   
   function handleSubmit(e){
@@ -24,8 +31,10 @@ function Login() {
     .then((r) =>{
       if (r.ok){
         r.json()
-        .then((user) => {setUser(user)
-           navigate("/")})
+        .then((data) => { console.log(data)
+          onLogin(data)
+          navigateToNewEvent()
+      })
 
       }else {
         alert("Incorrect email or password!")
@@ -35,6 +44,9 @@ function Login() {
       console.error('Error logging in:', error);
     })
   }
+
+
+
 
   return (
     <div>
