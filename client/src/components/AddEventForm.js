@@ -2,6 +2,7 @@ import React,{useState} from 'react'
 
 function AddEventForm({handleAddEvent}) {
   const [step, setStep] = useState(1);
+  const[isLoggedIn, setIsLoggedIn]= useState(false)
   const[eventData, setEventData] = useState({
     title:"",
     venue:"",
@@ -62,7 +63,9 @@ function handlePrevStep(){
   setStep((prevStep) => prevStep - 1);
 }
 
-
+if (!isLoggedIn) {
+  <Redirect to ="/login"/>
+}
 
   return (
     <div>

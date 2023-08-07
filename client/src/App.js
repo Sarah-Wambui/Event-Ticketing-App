@@ -14,7 +14,6 @@ import PaymentConfirmation from './components/PaymentConfirmation';
 function App() {
   const[events, setEvents]= useState([])
   // console.log(events)
-  
   useEffect(()=>{   
     fetch("/events")
     .then(resp=> resp.json())
