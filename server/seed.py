@@ -57,6 +57,7 @@ with app.app_context():
         for n in range(10):
             payment = Payment(
             amount=randint(1000, 10000),
+            phone_number = fake.phone_number(),
             user_id=randint(1,10),
             event_id=randint(1, 10)
         )

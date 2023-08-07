@@ -18,11 +18,9 @@ class User(db.Model, SerializerMixin):
     username = db.Column(db.String, nullable=False)
     email = db.Column(db.String, unique=True)
     _password_hash = db.Column(db.String, nullable=False)
-    
-    #one to many
-    payments = db.relationship("Payment", backref="user")  
-    
-    #password protection by encrypting it using the hybrid property decorator
+    is_attendee = db.Column(db.Boolean, default=True)
+    payments = db.relationship("Payment", backref="user")
+
     @hybrid_property
     def password_hash(self):
         raise AttributeError("Password hashes may not be viewed.")
@@ -69,6 +67,7 @@ class Payment(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     amount = db.Column(db.Integer)
+    phone_number = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
     serialize_rules = ("-user.payments", "-event.payments",)

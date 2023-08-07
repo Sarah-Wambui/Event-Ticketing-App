@@ -1,4 +1,5 @@
 import React,{useState} from 'react'
+import CrudApp  from './CrudApp';
 
 function AddEventForm({handleAddEvent}) {
   const [step, setStep] = useState(1);
@@ -114,6 +115,7 @@ function handlePrevStep(){
             </form>
         </div>
       )}
+      <CrudApp />
     </div>
   );
 }
