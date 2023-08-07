@@ -3,6 +3,9 @@ import {useNavigate} from "react-router-dom"
 
 function AddEventForm({handleAddEvent, isLoggedIn}) {
   const [step, setStep] = useState(1);
+  const [image, setImage] = useState("")
+  const [url, setUrl] = useState("")
+  console.log(url)
   const [eventData, setEventData] = useState({
     title:"",
     venue:"",
@@ -16,7 +19,7 @@ function AddEventForm({handleAddEvent, isLoggedIn}) {
     ticket_number:"",
     date_time:"",
   })
-   console.log(eventData)
+  console.log(eventData)
   
   function handleSubmitForm(event) {
     event.preventDefault()
@@ -73,7 +76,25 @@ function AddEventForm({handleAddEvent, isLoggedIn}) {
     } 
   }, [isLoggedIn, navigate]);
 
-
+   function handleUploadImage(){
+    // event.preventDefault()
+    const data = new FormData()
+    data.append("file", image)
+    data.append("cloud_name", "eventgo")
+    fetch("/upload", {
+      method: "POST",
+      body: data
+    })
+    .then((resp) => resp.json())
+    .then(data=> {
+      setUrl(data.url)
+      setEventData((prevEventData) => ({
+        ...prevEventData,
+        image_url: data.url
+      }));
+    })
+    .catch(error => console.log("could not post image", error))
+   }
   
 
   return (
@@ -102,8 +123,8 @@ function AddEventForm({handleAddEvent, isLoggedIn}) {
             <form onSubmit={handleSubmitForm}> 
               <label> Ticket Price:</label>
               <input type="number"onChange={handleChange} name ="ticket_price" value={eventData.ticket_price}/>
-              <label> Image :</label>
-              <input type="text"onChange={handleChange} name ="image_url" value={eventData.image_url}/>
+              {/* <label> Image :</label>
+              <input type="text"onChange={handleChange} name ="image_url" value={eventData.image_url}/> */}
               <label> Available Tickets:</label>
               <input type="number"onChange={handleChange} name ="available_tickets" value={eventData.available_tickets}/>
               <button type='button' onClick={handlePrevStep}>Previous</button>
@@ -124,9 +145,13 @@ function AddEventForm({handleAddEvent, isLoggedIn}) {
               </button>
               <button type="submit">Add Event</button>
             </form>
+            <div>
+              <label>Image:</label>
+              <input type="file" onChange={(e) => setImage(e.target.files[0])}/>
+              <button onClick={handleUploadImage}>Upload Image</button>
+            </div>
         </div>
       )}
-     
     </div>
   );
 }

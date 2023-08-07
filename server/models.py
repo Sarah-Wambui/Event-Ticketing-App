@@ -59,7 +59,7 @@ class Event(db.Model, SerializerMixin):
     # payments = db.relationship("Ticket", backref="event")
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     user= db.relationship("User", backref="events", lazy=True)
-    upload = db.relationship("Upload", backref="event", uselist=False)
+    # upload = db.relationship("Upload", backref="event", uselist=False)
 
     def to_dict(self):
         return {
@@ -99,13 +99,13 @@ class Ticket(db.Model, SerializerMixin):
         return f"Tickect {self.ticket_number}."
     
 
-class Upload(db.Model,SerializerMixin):
-    __tablename__ = "uploads"
+# class Upload(db.Model,SerializerMixin):
+#     __tablename__ = "uploads"
 
-    id = db.Column(db.Integer, primary_key=True)
-    image = db.Column(db.String)
-    event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
-    # event = db.relationship("Event", backref="upload", uselist=False)
+#     id = db.Column(db.Integer, primary_key=True)
+#     image = db.Column(db.String)
+#     event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
+#     # event = db.relationship("Event", backref="upload", uselist=False)
     
 # class Stk_push():
 
