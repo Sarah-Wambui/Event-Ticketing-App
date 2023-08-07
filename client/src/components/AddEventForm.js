@@ -1,9 +1,9 @@
-import React,{useState} from 'react'
-import CrudApp  from './CrudApp';
+import React,{useState, useEffect} from 'react'
+import {useNavigate} from "react-router-dom"
 
-function AddEventForm({handleAddEvent}) {
+function AddEventForm({handleAddEvent, isLoggedIn}) {
   const [step, setStep] = useState(1);
-  const[eventData, setEventData] = useState({
+  const [eventData, setEventData] = useState({
     title:"",
     venue:"",
     description:"",
@@ -16,54 +16,65 @@ function AddEventForm({handleAddEvent}) {
     ticket_number:"",
     date_time:"",
   })
+   console.log(eventData)
+  
+  function handleSubmitForm(event) {
+    event.preventDefault()
+    fetch("/events",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "Authorization": "Bearer " + localStorage.getItem("access_token")
+    },
+    body:JSON.stringify(eventData),
 
-function handleSubmitForm(event) {
-  event.preventDefault()
-  fetch("/events",{
-   method:"POST",
-   headers:{
-    "Content-Type":"application/json",
-   },
-   body:JSON.stringify(eventData),
-
-  })
-  .then((resp)=>resp.json())
-  .then((newEvent)=>handleAddEvent(newEvent))
-  setEventData({
-    title:"",
-    venue:"",
-    description:"",
-    category:"",
-    organizer:"",
-    image_url:"",
-    ticket_price:"",
-    available_tickets:"",
-    tickets_sold:"",
-    ticket_number:"",
-    date_time:"",
-  })
-
-
-
-}
-function handleChange(event) {
-  const { name, value } = event.target;
-  const newValue = value;
-  setEventData((prevEventData) => ({
-    ...prevEventData,
-    [name]:newValue,
-  }));
-}
-
-function handleNextStep(){
-  setStep((prevStep) => prevStep + 1);
-}
-
-function handlePrevStep(){
-  setStep((prevStep) => prevStep - 1);
-}
+    })
+    .then((resp)=>resp.json())
+    .then((newEvent)=>handleAddEvent(newEvent))
+    setEventData({
+      title:"",
+      venue:"",
+      description:"",
+      category:"",
+      organizer:"",
+      image_url:"",
+      ticket_price:"",
+      available_tickets:"",
+      tickets_sold:"",
+      ticket_number:"",
+      date_time:"",
+    })
 
 
+
+  }
+  function handleChange(event) {
+    const { name, value } = event.target;
+    const newValue = value;
+    setEventData((prevEventData) => ({
+      ...prevEventData,
+      [name]:newValue,
+    }));
+  }
+
+  function handleNextStep(){
+    setStep((prevStep) => prevStep + 1);
+  }
+
+  function handlePrevStep(){
+    setStep((prevStep) => prevStep - 1);
+  }
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate('/login');
+    } 
+  }, [isLoggedIn, navigate]);
+
+
+  
 
   return (
     <div>
@@ -115,7 +126,7 @@ function handlePrevStep(){
             </form>
         </div>
       )}
-      <CrudApp />
+     
     </div>
   );
 }

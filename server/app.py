@@ -1,6 +1,6 @@
 from config import app, db, api
 from flask_restful import Resource
-from models import User, Event,Payment
+from models import User, Event, Ticket
 from flask import make_response, jsonify, request
 from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import create_access_token, jwt_required , get_jwt_identity , get_jwt
@@ -96,27 +96,30 @@ class Login(Resource):
                 "is_attendee": user.is_attendee,
                 "username": user.username
             }
-            token = create_access_token(identity=user.id )
+            token = create_access_token(identity=user.id , additional_claims=metadata)
             print({"token":token})
-            return jsonify(token=token)
+            return jsonify({"token":token, "user_id":user.id})
         return make_response(jsonify({"error": "Invalid details"}), 401)
 
 api.add_resource(Login, "/login")
 
 
-# @app.route("/common", methods=["POST"])
-# @jwt_required()
-# def common():
-#     current_user_id = get_jwt_identity()
-#     user = User.query.get(current_user_id)
-#     if user.is_attendee:
-#         user.is_attendee = False
-#         db.session.commit()
-#     return 
+@app.route("/common")
+@jwt_required()
+def common():
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+    if user.is_attendee:
+        user.is_attendee = False
+        return "I am now an organizer"
+    return "I am still an attendee"
 
 class Events(Resource):
     def get(self):
-        events = [event.to_dict() for event in Event.query.all()]
+        # events = [event.to_dict() for event in Event.query.all()]
+        events = []
+        for event in Event.query.all():
+            events.append(event.to_dict())
         return make_response(jsonify(events), 200)
     
 
@@ -135,12 +138,13 @@ class Events(Resource):
             title=events["title"],
             venue=events["venue"],
             description= events["description"],
-            organizer=user.id,
+            organizer=user.username,
             category =events["category"],
             image_url = events["image_url"],
             ticket_price=events["ticket_price"],
             available_tickets=events["available_tickets"],
-            date_time=events["date_time"]
+            date_time=events["date_time"],
+            user_id=current_user_id,
         )
         db.session.add(new_event)
         db.session.commit()
@@ -154,8 +158,15 @@ class EventById(Resource):
         return make_response(jsonify(event.to_dict()), 200)
     
 
+    @jwt_required()
     def patch(self, id):
         event= Event.query.filter_by(id=id).first()
+
+        current_user_id = get_jwt_identity() 
+        user = User.query.get(current_user_id)
+        if user.is_attendee:
+            user.is_attendee = False
+            db.session.commit() 
 
         for attr in request.form:
             setattr(event, attr, request.form[attr])
@@ -164,15 +175,24 @@ class EventById(Resource):
 
         return make_response(jsonify(event.to_dict()), 200)
     
-    
+    @jwt_required()
     def delete(self, id):
         event = Event.query.filter_by(id = id).first()
+
+        current_user_id = get_jwt_identity() 
+        user = User.query.get(current_user_id)
+        if user.is_attendee:
+            user.is_attendee = False
+            db.session.commit()
+
         db.session.delete(event)
         db.session.commit()
 
         return {}, 200
 
 api.add_resource(EventById, "/events/<int:id>") 
+
+
 
 
 # get access token from mpesa
@@ -189,10 +209,11 @@ base_url = 'https://e90b-196-216-65-2.ngrok-free.app'
 request_bin_url = "https://enq9mf0wmqf8.x.pipedream.net/payments"
 
 # initiate M-PESA Express
-@app.route("/pay", methods=["POST"])
+
+@app.route("/pay/<int:event_id>", methods=["POST"])
 def MpesaExpress():
     # amount = request.args.get("amount")
-    # phone = request.args.get("phone")
+    phone = request.args.get("phone")
     data = request.get_json()
     amount = data.get("amount")
     phone = data.get("phone")
@@ -226,7 +247,7 @@ def MpesaExpress():
     return res
 
 
-@app.route('/payments', methods=['POST'])
+@app.route('/tickets', methods=['POST'])
 def incoming():
     data = request.get_json()
     print(data)
@@ -240,13 +261,13 @@ def incoming():
 
     # Save the data to the database
     if amount and phone_number:
-        payment = Payment(
+        ticket = Ticket(
             amount=amount,
             phone_number= phone_number, 
             user_id=user.id, 
             event_id=event.id
         )  # Replace user_id and event_id with appropriate values
-        db.session.add(payment)
+        db.session.add(ticket)
         db.session.commit()
 
     return "ok"

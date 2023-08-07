@@ -14,7 +14,7 @@ function PaymentConfirmation() {
 
     function handleSubmit(e) {
         e.preventDefault()
-        fetch("/pay", {
+        fetch("https://enrk3a8cfr3zo.x.pipedream.net", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
