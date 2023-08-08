@@ -233,7 +233,7 @@ request_bin_url = "https://enq9mf0wmqf8.x.pipedream.net/payments"
 
 # initiate M-PESA Express
 
-@app.route("/pay/<int:event_id>", methods=["POST"])
+@app.route("/pay", methods=["POST"])
 def MpesaExpress():
     # amount = request.args.get("amount")
     phone = request.args.get("phone")
