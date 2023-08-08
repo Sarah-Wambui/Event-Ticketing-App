@@ -10,7 +10,7 @@ const EventList = ({ events , user, setEvents}) => {
 
     
     return (
-        <div>
+        <div className='event-container'>
             {fetchedEvent}
         </div>
     )
