@@ -3,7 +3,7 @@ from flask_restful import Resource
 from models import User, Event, Ticket
 from flask import make_response, jsonify, request
 from sqlalchemy.exc import IntegrityError
-from flask_jwt_extended import create_access_token, jwt_required , get_jwt_identity , get_jwt
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, get_jwt
 from flask_mail import Message
 from config import mail
 import requests
@@ -12,22 +12,22 @@ from datetime import datetime
 import base64
 import cloudinary
 import cloudinary.uploader
-from flask_cors import  cross_origin
+from flask_cors import cross_origin
 from datetime import timedelta
 
 
-          
-cloudinary.config( 
-  cloud_name = "eventgo", 
-  api_key = "416435438684123", 
-  api_secret = "dX_5_uw8boFR9DFi94aolYCiRCw" 
+cloudinary.config(
+    cloud_name="eventgo",
+    api_key="416435438684123",
+    api_secret="dX_5_uw8boFR9DFi94aolYCiRCw"
 )
 
 
 class Home(Resource):
     def get(self):
         return "message: Welcome to Event Ticketing"
-    
+
+
 api.add_resource(Home, "/")
 
 
@@ -35,6 +35,8 @@ class Users(Resource):
     def get(self):
         users = [user.to_dict() for user in User.query.all()]
         return make_response(jsonify(users), 200)
+
+
 api.add_resource(Users, "/users")
 
 
@@ -42,6 +44,8 @@ class UserById(Resource):
     def get(self, id):
         user = User.query.filter_by(id=id).first()
         return make_response(jsonify(user.to_dict()), 200)
+
+
 api.add_resource(UserById, "/users/<int:id>")
 
 
@@ -51,11 +55,11 @@ class SignUp(Resource):
 
         username = data.get("username")
         password = data.get("password")
-        email = data.get("email") 
+        email = data.get("email")
 
         user = User(
-            username = username,
-            email = email,
+            username=username,
+            email=email,
         )
         # the setter will encrypt this
         user.password_hash = password
@@ -64,9 +68,8 @@ class SignUp(Resource):
             db.session.add(user)
             db.session.commit()
 
-
             # msg = Message('Hello from the other side!',
-            #      sender =   'rogonykiplagat@gmail.com', 
+            #      sender =   'rogonykiplagat@gmail.com',
             #      recipients = [email])
             # msg.body = "Your account is created successfully"
             # mail.send(msg)
@@ -78,7 +81,8 @@ class SignUp(Resource):
             print("no, here!")
 
             return {"error": "422 Unprocessable request"}, 422
-        
+
+
 api.add_resource(SignUp, "/signup")
 
 
@@ -94,16 +98,18 @@ class Login(Resource):
         print("Get the token!")
 
         if user:
-          if user.authenticate(password):
-            metadata = {
-                "is_attendee": user.is_attendee,
-                "username": user.username
-            }
-            # expires = timedelta(seconds=10)
-            token = create_access_token(identity=user.id , additional_claims=metadata)
-            print({"token":token})
-            return jsonify({"token":token, "user_id":user.id})
+            if user.authenticate(password):
+                metadata = {
+                    "is_attendee": user.is_attendee,
+                    "username": user.username
+                }
+                # expires = timedelta(seconds=10)
+                token = create_access_token(
+                    identity=user.id, additional_claims=metadata)
+                print({"token": token})
+                return jsonify({"token": token, "user_id": user.id})
         return make_response(jsonify({"error": "Invalid details"}), 401)
+
 
 api.add_resource(Login, "/login")
 
@@ -118,14 +124,13 @@ def common():
         return "I am now an organizer"
     return "I am still an attendee"
 
+
 class Events(Resource):
     def get(self):
-        # events = [event.to_dict() for event in Event.query.all()]
         events = []
         for event in Event.query.all():
             events.append(event.to_dict())
         return make_response(jsonify(events), 200)
-    
 
     @jwt_required()
     def post(self):
@@ -138,13 +143,13 @@ class Events(Resource):
             user.is_attendee = False
             db.session.commit()
 
-        new_event= Event(
+        new_event = Event(
             title=events["title"],
             venue=events["venue"],
-            description= events["description"],
+            description=events["description"],
             organizer=user.username,
-            category =events["category"],
-            image_url = events["image_url"],
+            category=events["category"],
+            image_url=events["image_url"],
             ticket_price=events["ticket_price"],
             available_tickets=events["available_tickets"],
             date_time=events["date_time"],
@@ -154,42 +159,43 @@ class Events(Resource):
         db.session.add(new_event)
         db.session.commit()
         return make_response(jsonify(new_event.to_dict()), 201)
+
+
 api.add_resource(Events, "/events")
 
 
 @app.route("/upload", methods=['POST'])
-@cross_origin()
-def upload_file():
-  if request.method == 'POST':
-    file_to_upload = request.files['file']
-    app.logger.info('%s file_to_upload', file_to_upload)
+class Upload(Resource):
+    @cross_origin()
+    def post(self):
+        file_to_upload = request.files['file']
+        app.logger.info('%s file_to_upload', file_to_upload)
 
-    if file_to_upload:
-      upload_result = cloudinary.uploader.upload(file_to_upload)
-      app.logger.info(upload_result)
-      
-      return jsonify(upload_result)
+        if file_to_upload:
+            upload_result = cloudinary.uploader.upload(file_to_upload)
+            app.logger.info(upload_result)
 
+            return jsonify(upload_result)
+
+
+api.add_resource(Upload, "/upload")
 
 
 class EventById(Resource):
     def get(self, id):
-        event= Event.query.filter_by(id=id).first()
+        event = Event.query.filter_by(id=id).first()
         return make_response(jsonify(event.to_dict()), 200)
-    
 
     @jwt_required()
     def patch(self, id):
-        # event= Event.query.filter_by(id=id).first()
         event = Event.query.get(id)
         data = request.get_json()
 
-
-        current_user_id = get_jwt_identity() 
+        current_user_id = get_jwt_identity()
         user = User.query.get(current_user_id)
         if user.is_attendee:
             user.is_attendee = False
-            db.session.commit() 
+            db.session.commit()
 
         for attr in data:
             setattr(event, attr, data[attr])
@@ -197,12 +203,12 @@ class EventById(Resource):
         db.session.commit()
 
         return make_response(jsonify(event.to_dict()), 200)
-    
+
     @jwt_required()
     def delete(self, id):
-        event = Event.query.filter_by(id = id).first()
+        event = Event.query.filter_by(id=id).first()
 
-        current_user_id = get_jwt_identity() 
+        current_user_id = get_jwt_identity()
         user = User.query.get(current_user_id)
         if user.is_attendee:
             user.is_attendee = False
@@ -213,9 +219,8 @@ class EventById(Resource):
 
         return {}, 200
 
-api.add_resource(EventById, "/events/<int:id>") 
 
-
+api.add_resource(EventById, "/events/<int:id>")
 
 
 # get access token from mpesa
@@ -224,70 +229,79 @@ def getAccesstoken():
     consumer_secret = 'Gvf54kDwZN2a0gHf'
     endpoint = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
 
-    data =(requests.get(endpoint, auth = HTTPBasicAuth(consumer_key, consumer_secret))).json()
+    data = (requests.get(endpoint, auth=HTTPBasicAuth(
+        consumer_key, consumer_secret))).json()
     print(data)
     return data["access_token"]
+
 
 base_url = 'https://e90b-196-216-65-2.ngrok-free.app'
 request_bin_url = "https://enq9mf0wmqf8.x.pipedream.net/payments"
 
 # initiate M-PESA Express
 
+
+@jwt_required()
 @app.route("/pay/<int:event_id>", methods=["POST"])
 def MpesaExpress():
     # amount = request.args.get("amount")
-    phone = request.args.get("phone")
-    data = request.get_json()
-    amount = data.get("amount")
-    phone = data.get("phone")
+    # phone = request.args.get("phone")
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+    if user:
+        data = request.get_json()
+        amount = data.get("amount")
+        phone = data.get("phone")
 
-    endpoint = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
-    access_token = getAccesstoken()
-    print(access_token)
-    headers = {"Authorization": "Bearer %s" % access_token}
-    Timestamp = datetime.now()
-    times = Timestamp.strftime("%Y%m%d%H%M%S")
-    password = "174379" + "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919" + times
-    datapass = base64.b64encode(password.encode('utf-8')).decode('utf-8')
-    my_endpoint = base_url + "/payments"
+        endpoint = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+        access_token = getAccesstoken()
+        print(access_token)
+        headers = {"Authorization": "Bearer %s" % access_token}
+        Timestamp = datetime.now()
+        times = Timestamp.strftime("%Y%m%d%H%M%S")
+        password = "174379" + \
+            "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919" + times
+        datapass = base64.b64encode(password.encode('utf-8')).decode('utf-8')
+        my_endpoint = base_url + "/payments"
 
-    data = {
-        "BusinessShortCode": "174379",
-        "Password": datapass,
-        "Timestamp": times,
-        "TransactionType": "CustomerPayBillOnline",
-        "PartyA": phone,  # fill with your phone number
-        "PartyB": "174379",
-        "PhoneNumber": phone,  # fill with your phone number
-        "CallBackURL": request_bin_url,
-        "AccountReference": "TestPay",
-        "TransactionDesc": "HelloTest",
-        "Amount": amount
-    }
+        data = {
+            "BusinessShortCode": "174379",
+            "Password": datapass,
+            "Timestamp": times,
+            "TransactionType": "CustomerPayBillOnline",
+            "PartyA": phone,  # fill with your phone number
+            "PartyB": "174379",
+            "PhoneNumber": phone,  # fill with your phone number
+            "CallBackURL": request_bin_url,
+            "AccountReference": "TestPay",
+            "TransactionDesc": "HelloTest",
+            "Amount": amount
+        }
 
-    res = requests.post(endpoint, json=data, headers=headers).json()
-    print(res)
-    return res
+        res = requests.post(endpoint, json=data, headers=headers).json()
+        print(res)
+        return res
 
 
 @app.route('/tickets', methods=['POST'])
 def incoming():
     data = request.get_json()
     print(data)
-    amount = data.get("Body", {}).get("stkCallback", {}).get("CallbackMetadata", {}).get("Item", [])[0].get("Value")
-    phone_number = data.get("Body", {}).get("stkCallback", {}).get("CallbackMetadata", {}).get("Item", [])[4].get("Value")
-
+    amount = data.get("Body", {}).get("stkCallback", {}).get(
+        "CallbackMetadata", {}).get("Item", [])[0].get("Value")
+    phone_number = data.get("Body", {}).get("stkCallback", {}).get(
+        "CallbackMetadata", {}).get("Item", [])[4].get("Value")
 
     # Find the user and event based on phone_number and other relevant data
     user = User.query.filter_by(phone_number=phone_number).first()
-    event = Event.query.filter_by(id = id).first()
+    event = Event.query.filter_by(id=id).first()
 
     # Save the data to the database
     if amount and phone_number:
         ticket = Ticket(
             amount=amount,
-            phone_number= phone_number, 
-            user_id=user.id, 
+            phone_number=phone_number,
+            user_id=user.id,
             event_id=event.id
         )  # Replace user_id and event_id with appropriate values
         db.session.add(ticket)
@@ -296,9 +310,5 @@ def incoming():
     return "ok"
 
 
-
-
-
 if __name__ == "__main__":
     app.run(port=5555, debug=True)
-

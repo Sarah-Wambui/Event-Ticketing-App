@@ -2,19 +2,16 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 
 function PaymentConfirmation() {
-    console.log(useParams());
     const [phone, setPhone] = useState("")
     const { product } = useParams();
     const [amount, setAmount] = useState(product)
-    console.log(amount)
-
     const [formData, setFormData] = useState(null)
     console.log(formData)
     
 
     function handleSubmit(e) {
         e.preventDefault()
-        fetch("https://enrk3a8cfr3zo.x.pipedream.net", {
+        fetch("/pay", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
