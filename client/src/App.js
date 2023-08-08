@@ -18,7 +18,6 @@ function App() {
   const [authenticatedUser, setAuthenticatedUser] = useState(null)
 
   // console.log(events)
-  
   useEffect(()=>{   
     fetch("/events")
     .then(resp=> resp.json())

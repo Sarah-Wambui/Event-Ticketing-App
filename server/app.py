@@ -177,7 +177,6 @@ class EventById(Resource):
         event= Event.query.filter_by(id=id).first()
         return make_response(jsonify(event.to_dict()), 200)
     
-
     @jwt_required()
     def patch(self, id):
         # event= Event.query.filter_by(id=id).first()
