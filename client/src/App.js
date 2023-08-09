@@ -24,6 +24,31 @@ function App() {
     .then(events=> setEvents(events))
   }, [])
 
+  // const filterLocations = e =>{
+  //   const search = e.target.value.toLowerCase()
+  //   const filteredNames = events.filter(location => location.venue.toLowerCase().includes(search) )
+  //   setEvents(filteredNames)
+  // }
+
+  function handleChange(e) {
+    // Get the user's search input and convert it to lowercase
+    const search = e.target.value.toLowerCase();
+  
+    // If the search input is empty, show the original list of events
+    if (search === '') {
+      fetch("/events")
+        .then(resp => resp.json())
+        .then(events => setEvents(events));
+    } else {
+      // Filter the list of events based on whether the venue name includes the search term
+      const filteredNames = events.filter(location => location.venue.toLowerCase().includes(search));
+  
+      // Update the 'events' state with the filtered list
+      setEvents(filteredNames);
+    }
+  }
+  
+  
   
   function handleAddEvent(newEvent) {
     setEvents([...events,newEvent])
@@ -43,6 +68,13 @@ function App() {
     <div className="App">
       <Header/>
       <NavBar/>
+      <input type='text' onChange={handleChange} />
+      <button>search</button>
+      {/* <div>
+        {events.map(event=>{
+          return <li key={event.id}>{event.venue}</li>
+        })}
+      </div> */}
       <main>
         <Routes>
           <Route exact path="/" element = {<EventList events={events} user={authenticatedUser} setEvents={setEvents}/>} />
