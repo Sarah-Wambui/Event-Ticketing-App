@@ -2,28 +2,15 @@ from config import db, bcrypt
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy_serializer import SerializerMixin
 
-# event_users = db.Table(
-#     "event_user",
-#     db.Column("user_id", db.ForeignKey("users.id"), primary_key=True),
-#     db.Column("event_id", db.ForeignKey("events.id"), primary_key=True),
-#     extend_existing=True,
-# )
-
 
 class User(db.Model, SerializerMixin):
     __tablename__ = "users"
-
-
-    # serialize_rules =("_password_hash", "-events.user",)
-
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False)
     email = db.Column(db.String, unique=True)
     _password_hash = db.Column(db.String, nullable=False)
     is_attendee = db.Column(db.Boolean, default=True)
-    # payments = db.relationship("Ticket", backref="user")
-    # events= db.relationship("Event", backref="user")
 
 
 
@@ -43,7 +30,6 @@ class User(db.Model, SerializerMixin):
 class Event(db.Model, SerializerMixin):
     __tablename__ = "events"
 
-    # serialize_rules = ("-user.events",)
     
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String)
@@ -56,10 +42,8 @@ class Event(db.Model, SerializerMixin):
     available_tickets = db.Column(db.Integer)
     tickets_sold = db.Column(db.Integer)
     date_time = db.Column(db.String)
-    # payments = db.relationship("Ticket", backref="event")
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     user= db.relationship("User", backref="events", lazy=True)
-    # upload = db.relationship("Upload", backref="event", uselist=False)
 
     def to_dict(self):
         return {
@@ -92,20 +76,10 @@ class Ticket(db.Model, SerializerMixin):
     amount = db.Column(db.Integer)
     phone_number = db.Column(db.String)
 
-    # serialize_rules = ("-user.tickets", "-event.tickets",)
-
 
     def __repr__(self):
         return f"Tickect {self.ticket_number}."
     
-
-# class Upload(db.Model,SerializerMixin):
-#     __tablename__ = "uploads"
-
-#     id = db.Column(db.Integer, primary_key=True)
-#     image = db.Column(db.String)
-#     event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
-#     # event = db.relationship("Event", backref="upload", uselist=False)
     
 # class Stk_push():
 

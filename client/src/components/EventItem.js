@@ -23,7 +23,7 @@ const EventItem = ({ user, event, setEvents, events }) => {
         })
     }
     
-    
+
 
 
     return (

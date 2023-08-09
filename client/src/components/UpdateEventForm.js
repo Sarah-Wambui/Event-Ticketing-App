@@ -1,16 +1,16 @@
-import React,{useState} from 'react'
-import { useParams, useLocation } from 'react-router-dom';
+import React,{useState,useEffect} from 'react'
+import { useParams } from 'react-router-dom';
 
 
 function UpdateEventForm({setEvents, events}) {
   const [step, setStep] = useState(1);
   const {id} = useParams()
-  const location = useLocation();
-  const event = location.state && location.state.event
-  console.log(event)
+  
+  const [event, setEvent] = useState([])
+  console.log(event.title)
   const [eventData, setEventData] = useState({
-    title: "",
-    venue:"",
+    title:"",
+    venue: "",
     description:"",
     category:"",
     organizer:"",
@@ -21,11 +21,29 @@ function UpdateEventForm({setEvents, events}) {
     ticket_number:"",
     date_time:"",
   })
-  // console.log(eventData)  
-
-
- 
-  console.log(id)
+  console.log(eventData.title)
+  
+  useEffect(()=>{   
+    fetch(`/events/${id}`)
+    .then(resp=> resp.json())
+    .then(event=>{
+      setEvent(event)
+      setEventData(prevEventData => ({
+        ...prevEventData,
+        title: event.title,  // Update eventData with event.title
+        venue: event.venue,
+        description: event.description,
+        category:event.category,
+        organizer:event.organizer,
+        image_url:event.image_url,
+        ticket_price:event.ticket_price,
+        available_tickets:event.available_tickets,
+        tickets_sold:event.tickets_sold,
+        ticket_number:event.ticket_number,
+        date_time:event.date_time,
+      }));
+    } )
+  }, [id])
 
   function handleSubmitForm(event){
     event.preventDefault()
@@ -161,6 +179,7 @@ function handleNextStep() {
               </button>
             {/* </form> */}
         </div>
+        
       )}
     </form>  
     </div>
