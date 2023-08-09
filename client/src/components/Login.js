@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {useNavigate} from "react-router-dom"
+import {useNavigate, Link} from "react-router-dom"
 
 
 function Login({onLogin}) {
@@ -55,30 +55,44 @@ function Login({onLogin}) {
   //   return;
   // }
 
-
-
-
   return (
-    <div>
-      <h3>Login</h3>
-      <form onSubmit={handleSubmit}>
-              <label> Email: </label>
-              <input type="text"
-              name="email"
-              id="email"
-              value={email}
-              placeholder="john.doe@example.com"
-              onChange={(e) => setEmail(e.target.value)} autoComplete='off' required />
-              <label> Password: </label>
-              <input type="password"
-              name="password"
-              id="password"
-              value={password}
-              
-              onChange={(e) => setPassword(e.target.value)} required/>
-        <button type="submit"> Login </button>
+    <div className="login-container">
+      <form className="login-form" onSubmit={handleSubmit}>
+        <h3 className="login-header">Login</h3>
+        <div className="login-input-container">
+          <label>Email:</label>
+          <input
+            type="text"
+            className="login-input"
+            name="email"
+            id="email"
+            value={email}
+            placeholder="john.doe@example.com"
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="off"
+            required
+          />
+        </div>
+        <div className="login-input-container">
+          <label>Password:</label>
+          <input
+            type="password"
+            className="login-input"
+            name="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit" className="login-button">
+          Login
+        </button>
+        <p className="signup-link">
+          Don't have an account? <Link to="/signup">Sign Up</Link>
+        </p>
       </form>
     </div>
-  )
-}
-export default Login
+  );
+}  
+export default Login;

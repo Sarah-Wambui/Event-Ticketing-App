@@ -41,7 +41,7 @@ function App() {
   
   return (
     <div className="App">
-      <Header/>
+      {/* <Header/> */}
       <NavBar/>
       <main>
         <Routes>

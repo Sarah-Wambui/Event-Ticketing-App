@@ -65,13 +65,13 @@ class SignUp(Resource):
             db.session.commit()
 
 
-            # msg = Message('Hello from the other side!',
-            #      sender =   'rogonykiplagat@gmail.com', 
-            #      recipients = [email])
-            # msg.body = "Your account is created successfully"
-            # mail.send(msg)
+            msg = Message('Hello from the other side!',
+                 sender =   'rogonykiplagat@gmail.com', 
+                 recipients = [email])
+            msg.body = "Your account is created successfully"
+            mail.send(msg)
 
-            # return "Message sent"
+            return "Message sent"
             print(user.to_dict())
             return make_response(jsonify(user.to_dict()), 201)
         except IntegrityError:

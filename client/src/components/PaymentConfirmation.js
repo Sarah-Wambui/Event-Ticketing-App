@@ -37,8 +37,8 @@ function PaymentConfirmation() {
                 <br/>
            
                 <input type="text" onChange={(e) => setPhone(e.target.value)} autoComplete='off' required name="phone" value={phone} pattern="^254\d{9}$"
-  title="Please enter a valid phone number in the format '254712345678'."
-  placeholder="254712345678"/> <br />
+                    title="Please enter a valid phone number in the format '254712345678'."
+                    placeholder="254712345678"/> <br />
                 <br/>
                 <label>Amount</label>
                 <br/>
