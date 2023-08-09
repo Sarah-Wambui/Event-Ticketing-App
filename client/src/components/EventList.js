@@ -1,5 +1,6 @@
 import React from 'react'
 import EventItem from "./EventItem"
+import Search from "./Search"
 
 const EventList = ({ events , user, setEvents}) => {
 
@@ -8,11 +9,16 @@ const EventList = ({ events , user, setEvents}) => {
         <EventItem key={index} event={event} user={user} setEvents={setEvents} events={events} />
     ))
 
+
     
     return (
-        <div>
+        <>
+         <Search  events={events} setEvents={setEvents} />
+         <div className='event-container'>       
             {fetchedEvent}
         </div>
+        </>
+
     )
 }
 

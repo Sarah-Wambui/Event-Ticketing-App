@@ -20,6 +20,11 @@ function Login({onLogin}) {
   
   function handleSubmit(e){
     e.preventDefault()
+    if (password.length !== 8) {
+      alert('Password must be 8 characters long.');
+      return;
+    }
+  
     fetch("/login",{
       method:"POST",
       headers:{
@@ -42,7 +47,13 @@ function Login({onLogin}) {
     .catch((error) => {
       console.error('Error logging in:', error);
     })
+    
   }
+
+  // if (password.length !== 6) {
+  //   alert('Password must be exactly 6 characters long.');
+  //   return;
+  // }
 
 
 
@@ -56,12 +67,14 @@ function Login({onLogin}) {
               name="email"
               id="email"
               value={email}
+              placeholder="john.doe@example.com"
               onChange={(e) => setEmail(e.target.value)} autoComplete='off' required />
               <label> Password: </label>
               <input type="password"
               name="password"
               id="password"
               value={password}
+              
               onChange={(e) => setPassword(e.target.value)} required/>
         <button type="submit"> Login </button>
       </form>

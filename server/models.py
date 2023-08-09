@@ -37,7 +37,7 @@ class Event(db.Model, SerializerMixin):
     description = db.Column(db.String)
     category=db.Column(db.String)
     organizer = db.Column(db.String)
-    image_url = db.Column(db.String)
+    image_url = db.Column(db.String, nullable=True)
     ticket_price = db.Column(db.Integer)
     available_tickets = db.Column(db.Integer)
     tickets_sold = db.Column(db.Integer)
@@ -63,7 +63,6 @@ class Event(db.Model, SerializerMixin):
 
     def __repr__(self):
         return f"Event {self.title} will be held at {self.venue}"
-    
 
 class Ticket(db.Model, SerializerMixin):
     __tablename__ = "tickets"

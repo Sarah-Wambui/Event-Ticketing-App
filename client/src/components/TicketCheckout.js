@@ -16,7 +16,7 @@ function TicketCheckout() {
 
     // increment count by one
     function handleIncrement() {
-        if (count < 10) {
+        if (count < checkout.available_tickets) {
             setCount((prevCount) => prevCount + 1)
         } else { setCount("Sold Out") }
     }
@@ -39,7 +39,7 @@ function TicketCheckout() {
                 <p>Ticket Number:{checkout.id}</p>
                 <p>Event Date:{checkout.date_time}</p>
                 <p>Price: {checkout.ticket_price}</p>
-                <p>No.of Tickets{checkout.available_tickets}</p>
+                {/* <p>Tickets: {count}</p> */}
                 <button onClick={handleIncrement}> <span> + </span></button>
                 <span> {count} </span>
                 <button onClick={handleDecrement}><span> - </span></button>
@@ -49,7 +49,7 @@ function TicketCheckout() {
                 <h5>Order Summary</h5>
                 <p>{count} * {checkout.ticket_price}: </p>
                 <p>Total: {product}</p>
-                <Link to= {`/:${id}/checkout/${product}`}><button>CHECKOUT</button></Link>   
+                <Link to= {`/${id}/checkout/${product}`}><button>CHECKOUT</button></Link>   
             </div>
         </div>
     )

@@ -1,38 +1,97 @@
-.App {
-  text-align: center;
+.event-container {
+  padding: 1rem;
+  display:grid;
+  grid-template-columns: repeat(4,1fr);
+  grid-gap:1rem;  
+}
+nav {
+  background-color: #333;
+  display:flex;
+  justify-content:space-between;
+  padding:3rem;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+nav a {
+  text-decoration:double;
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.card {
+  position: relative;
+  width: 340px;
+  height: 450px;
+  /* background:black; */
+  border-radius: 18px;
+  overflow: hidden;
+  /* border: 1px solid; */
+  box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.poster {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 65%;
+  overflow: hidden;
+}
+
+.poster::before {
+  content: '';
+  position: absolute;
+  bottom: -45%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  transition: .3s;
+}
+
+.card:hover .poster::before {
+  bottom: 0;
+}
+
+.poster img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: .3s;
+}
+.poster h1 {
+  color: #ff0000;
+}
+
+.card:hover .poster img {
+  transform: scale(1.1);
+}
+
+.details {
+  position: absolute;
+  bottom: -100%;
+  left: 0;
+  width: 100%;
+  height: auto;
+  padding: 1.5em 1.5em 2em;
+  background: #000a;
+  backdrop-filter: blur(16px) saturate(120%);
+  transition: .3s;
+  color: #fff;
+  z-index: 2;
+}
+
+.card:hover .details {
+  bottom: 0;
+}
+.ticket {
+  position: absolute;
+}
+
+.search{
+  text-align: center;
+  padding: 1rem;
+  margin: 10px 0 10px 70%;
+  width: 20%;
 }

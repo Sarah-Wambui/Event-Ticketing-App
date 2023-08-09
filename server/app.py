@@ -103,15 +103,21 @@ class Login(Resource):
                     "is_attendee": user.is_attendee,
                     "username": user.username
                 }
-                # expires = timedelta(seconds=10)
+                expires = timedelta(minutes=30)
                 token = create_access_token(
-                    identity=user.id, additional_claims=metadata)
+                    identity=user.id, additional_claims=metadata, expires_delta=expires)
                 print({"token": token})
                 return jsonify({"token": token, "user_id": user.id})
         return make_response(jsonify({"error": "Invalid details"}), 401)
 
 
 api.add_resource(Login, "/login")
+
+@app.route("/token/validate")
+@jwt_required()
+def validate_token():
+    pass
+
 
 
 @app.route("/common")
@@ -185,6 +191,7 @@ class EventById(Resource):
     def get(self, id):
         event = Event.query.filter_by(id=id).first()
         return make_response(jsonify(event.to_dict()), 200)
+    
 
     @jwt_required()
     def patch(self, id):
@@ -240,8 +247,6 @@ request_bin_url = "https://enq9mf0wmqf8.x.pipedream.net/payments"
 
 # initiate M-PESA Express
 
-
-@jwt_required()
 @app.route("/pay/<int:event_id>", methods=["POST"])
 def MpesaExpress():
     # amount = request.args.get("amount")
@@ -308,6 +313,9 @@ def incoming():
         db.session.commit()
 
     return "ok"
+
+
+
 
 
 if __name__ == "__main__":

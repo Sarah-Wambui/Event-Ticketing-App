@@ -45,7 +45,6 @@ app.config['MAIL_PASSWORD'] = 'nnxbugzfvvdavdij'
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 
-
 mail=Mail(app)
 
 db = SQLAlchemy()
