@@ -62,35 +62,47 @@ function Signup() {
     // }
 
 
-
-  return (
-    <div>
-     <form onSubmit={handleSubmit}>
-        <h3> Sign Up Form</h3>
-        <label htmlFor="username">Username:</label>
-            <input type="text" 
-            name="username" 
-            id="username" 
-            value={username} 
-            onChange={(e) => setUsername(e.target.value)} autoComplete='off' required />
-            <label htmlFor="email">Email:</label>
-            <input type="text" 
-            name="email" 
-            id="email" 
-            value={email} 
-            placeholder="john.doe@example.com"
-            onChange={(e) => setEmail(e.target.value)} autoComplete='off' required />
-            <label htmlFor="password">Password:</label>
-            <input type="password" 
-            name="password" 
-            id="password" 
-            value={password} 
-            onChange={(e) => setPassword(e.target.value)} required/>
-        <button type="submit" >Sign Up</button>
-        
-        </form> 
-    </div>
-  )
-}
-
-export default Signup
+    return (
+      <div className="signup-container">
+        <form className="signup-form" onSubmit={handleSubmit}>
+          <h3 className="login-header">Sign Up Form</h3>
+          <label htmlFor="username">Username:</label>
+          <input
+            type="text"
+            className="login-input"
+            name="username"
+            id="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            autoComplete="off"
+            required
+          />
+          <label htmlFor="email">Email:</label>
+          <input
+            type="email"
+            className="login-input"
+            name="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="off"
+            required
+          />
+          <label htmlFor="password">Password:</label>
+          <input
+            type="password"
+            className="login-input"
+            name="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button type="submit" className="login-button">
+            Sign Up
+          </button>
+        </form>
+      </div>
+    );
+};
+export default Signup;

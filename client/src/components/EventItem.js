@@ -35,20 +35,51 @@ const EventItem = ({ user, event, setEvents, events }) => {
             <p>Event Time: {date_time}</p>
             <h4> Venue: {venue}</h4>
             <div className='details'>
-            <p> Description: {description}</p>
-            <p> Organizer: {organizer}</p>
-            <p>Category:{category}</p>
-            <p>Ticket Price: {ticket_price}</p>
-            <p> Available Tickets: {available_tickets}</p>
-            <p> Remaining Tickets: </p>
-            <div className='ticket'>
-
-{user === user_id ? (<> <Link to={{ pathname: `/${id}/update`, state: { event } }}><button >Update</button></Link> <button onClick={() => handleDelete(id)}>Delete</button> </>) :  (<Link to ={`/${id}` }> <button id="buy"  > Buy Ticket </button></Link> )}
-
-{/*  */}
-</div>
+                <div className='detail-item'>
+                    <span className='label'>Description:</span>
+                    <p className='content'>{description}</p>
+                </div>
+                <div className='detail-item'>
+                    <span className='label'>Organizer:</span>
+                    <p className='content'>{organizer}</p>
+                </div>
+                <div className='detail-item'>
+                    <span className='label'>Category:</span>
+                    <p className='content'>{category}</p>
+                </div>
+                <div className='detail-item'>
+                    <span className='label'>Ticket Price:</span>
+                    <p className='content'>{ticket_price}</p>
+                </div>
+                <div className='detail-item'>
+                    <span className='label'>Available Tickets:</span>
+                    <p className='content'>{available_tickets}</p>
+                </div>
+                <div className='detail-item'>
+                    <span className='label'>Remaining Tickets:</span>
+                    <p className='content'></p>
+                </div>
+                    <div className='ticket'>
+                        {user === user_id ? (
+                          <>
+                            <Link to={{ pathname: `/${id}/update`, state: { event } }}>
+                                <button className='update-btn' >Update</button>
+                            </Link> 
+                            <button className='delete-btn' onClick={() => handleDelete(id)}>Delete</button> 
+                          </>
+                        ) : (
+                            <Link to ={`/${id}` }> 
+                                <button className="fancy">
+                                    <span className="top-key"></span>
+                                    <span className="text">Buy Tickets</span>
+                                    <span className="bottom-key-1"></span>
+                                    <span className="bottom-key-2"></span>
+                                </button>
+                            </Link> 
+                        )}
+                        {/*  */}
+                    </div>
             </div>
-           
         </div>
     )
 }

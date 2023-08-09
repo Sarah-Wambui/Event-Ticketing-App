@@ -105,25 +105,27 @@ function handleNextStep() {
  
 
   return (
-    <div>
-     
+    <div className='form-container'>
         <form onSubmit={handleSubmitForm}>
           <h3>Step 1: Basic Event Details</h3>
           { step === 1 && (           
             <div> 
-              <label> Title:</label>
-              <input type="text" onChange={handleChange} name ="title" value={eventData.title} required/> 
-              <label> Venue</label>
-              <input type="text" onChange={handleChange} name ="venue" value={eventData.venue} required/> 
-              <label> Description:</label>
-              <input type="text"onChange={handleChange} name ="description" value={eventData.description} required/>
-              <label> Category:</label>
-              <input type="text"onChange={handleChange} name ="category" value={eventData.category} required/>
-              <label> Organizer:</label>
-              <input type="text"onChange={handleChange} name ="organizer" value={eventData.organizer} required/>
+              <label className="form-label"> Title:</label>
+              <input type="text" className="form-input" onChange={handleChange} name ="title" value={eventData.title} required/> 
+              <label className="form-label"> Venue</label>
+              <input type="text" className="form-input" onChange={handleChange} name ="venue" value={eventData.venue} required/> 
+              <label className="form-label"> Description:</label>
+              <input type="text" className="form-input" onChange={handleChange} name ="description" value={eventData.description} required/>
+              <label className="form-label"> Category:</label>
+              <input type="text" className="form-input" onChange={handleChange} name ="category" value={eventData.category} required/>
+              <label className="form-label"> Organizer:</label>
+              <input type="text" className="form-input" onChange={handleChange} name ="organizer" value={eventData.organizer} required/>
               {eventData.title && eventData.venue && eventData.description && eventData.category && eventData.organizer ? (
-              <button type="button" onClick={handleNextStep}>
-                Next
+              <button type='button' className='form-button float-right' onClick={handleNextStep}>
+                <span className='top-key'></span>
+                <span className='text'>Next</span>
+                <span className='bottom-key-1'></span>
+                <span className='bottom-key-2'></span>
               </button>
             ) : null}
             </div>
@@ -133,17 +135,24 @@ function handleNextStep() {
         <div>
           <h3>Step 2: Additional Details</h3>
             {/* <form onSubmit={handleSubmitForm}>  */}
-              <label> Ticket Price:</label>
-              <input type="number"onChange={handleChange} name ="ticket_price" value={eventData.ticket_price} required/>
+              <label className="form-label"> Ticket Price:</label>
+              <input type="number" className="form-input" onChange={handleChange} name ="ticket_price" value={eventData.ticket_price} required/>
               {/* <label> Image :</label>
               <input type="text"onChange={handleChange} name ="image_url" value={eventData.image_url} required/> */}
-              <label> Available Tickets:</label>
-              <input type="number"onChange={handleChange} name ="available_tickets" value={eventData.available_tickets} required/>
-              <button type='button' onClick={handlePrevStep}>Previous</button>
-
+              <label className="form-label" > Available Tickets:</label>
+              <input type="number" className="form-input" onChange={handleChange} name ="available_tickets" value={eventData.available_tickets} required/>
+              <button type='button' className='form-button float-right' onClick={handleNextStep}>
+                  <span className='top-key'></span>
+                  <span className='text'>Next</span>
+                  <span className='bottom-key-1'></span>
+                  <span className='bottom-key-2'></span>
+              </button>
               {eventData.ticket_price>=0 && eventData.available_tickets>=1 ? (
-              <button type="button" onClick={handleNextStep}>
-                Next
+              <button type='button' className='form-button float-right' onClick={handleNextStep}>
+                <span className='top-key'></span>
+                <span className='text'>Next</span>
+                <span className='bottom-key-1'></span>
+                <span className='bottom-key-2'></span>
               </button>
             ) : null}
             {/* </form> */}
@@ -154,12 +163,20 @@ function handleNextStep() {
         <div>
           <h3>Step 3: Location and Date/Time</h3>
             {/* <form onSubmit={handleSubmitForm}>  */}
-              <label> Date & Time:</label>
-              <input type="text"onChange={handleChange} name ="date_time" value={eventData.date_time} required/>
-              <button type='button' onClick={handlePrevStep}>
-                Previous
+              <label className="form-label"> Date & Time:</label>
+              <input type="text" className="form-input" onChange={handleChange} name ="date_time" value={eventData.date_time} required/>
+              <button type='button' className='form-button' onClick={handlePrevStep}>
+                <span className='top-key'></span>
+                <span className='text'>Previous</span>
+                <span className='bottom-key-1'></span>
+                <span className='bottom-key-2'></span>
               </button>
-              <button type="submit">Update Event</button>
+              <button type='submit' className='form-button float-right'>
+                <span className='top-key'></span>
+                <span className='text'>Update Event</span>
+                <span className='bottom-key-1'></span>
+                <span className='bottom-key-2'></span>
+              </button>
             {/* </form> */}
         </div>
         

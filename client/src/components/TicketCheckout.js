@@ -28,35 +28,52 @@ function TicketCheckout() {
         }
     }
     let product = count * checkout.ticket_price
-
     let remaining_tickets = checkout.available_tickets - count
     console.log(remaining_tickets)
 
-    
-
     return (
-        <div>
-            <h3>Ticket Checkout</h3>
-            <div>
-                <p>Event Name:{checkout.title} </p>
-                <p>Ticket Number:{checkout.id}</p>
-                <p>Event Date:{checkout.date_time}</p>
-                <p>Price: {checkout.ticket_price}</p>
-                <p>Available Tickets: {checkout.available_tickets}</p>
-                <p>Tickets: {count}</p>
-                <button onClick={handleIncrement}> <span> + </span></button>
-                <span> {count} </span>
-                <button onClick={handleDecrement}><span> - </span></button>
+        <div className="checkout-container">
+          <h3>Ticket Checkout</h3>
+          <div className="checkout-summary">
+            <div className="checkout-image-container">
+              <img src={checkout.image_url} alt="poster" className="checkout-image" />
             </div>
-            <div>
-                <img src={checkout.image_url} alt="poster" />
-                <h5>Order Summary</h5>
-                <p>{count} * {checkout.ticket_price}: </p>
-                <p>Total: {product}</p>
-                <Link to= {`/${id}/checkout/${product}`}><button>CHECKOUT</button></Link>   
+            <div className="details-separator"></div>
+            <div className="checkout-details">
+              <div className="event-detail">
+                <label>Event Name:</label>
+                <span>{checkout.title}</span>
+              </div>
+              <div className="event-detail">
+                <label>Ticket Number:</label>
+                <span>{checkout.id}</span>
+              </div>
+              <div className="event-detail">
+                <label>Event Date:</label>
+                <span>{checkout.date_time}</span>
+              </div>
+              <div className="event-detail">
+                <label>Price:</label>
+                <span>{checkout.ticket_price}</span>
+              </div>
             </div>
+            <div className="ticket-count">
+              <button className="count-button" onClick={handleDecrement}>-</button>
+              <span>{count}</span>
+              <button className="count-button" onClick={handleIncrement}>+</button>
+            </div>
+            <div className="details-separator"></div>
+            <div className="order-summary">
+              <h5>Order Summary</h5>
+              <p>
+                {count} * {checkout.ticket_price}:
+              </p>
+              <p>Total: {product}</p>
+              <Link to= {`/${id}/checkout/${product}/${remaining_tickets}`}><button>CHECKOUT</button></Link>
+            </div>
+          </div>
         </div>
-    )
+      );
 }
 
 export default TicketCheckout
