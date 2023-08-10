@@ -22,18 +22,17 @@ const EventItem = ({ user, event, setEvents, events }) => {
             setEvents(updatedEvents)
         })
     }
-    
-
 
 
     return (
         <div className='card'>
            <div className='poster'><img src={image_url} alt="poster" />
             </div> 
-
-            <h3> Title:{title}</h3>
-            <p>Event Time: {date_time}</p>
-            <h4> Venue: {venue}</h4>
+            <div>
+                <div className='title'>Title: {title}</div>
+                <div className='event-time'>Event Time: {date_time}</div>
+                <div className='venue'>Venue: {venue}</div>
+            </div>
             <div className='details'>
                 <div className='detail-item'>
                     <span className='label'>Description:</span>

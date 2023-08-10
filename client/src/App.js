@@ -11,6 +11,7 @@ import AddEventForm from "./components/AddEventForm";
 import TicketCheckout from "./components/TicketCheckout";
 import PaymentConfirmation from "./components/PaymentConfirmation";
 import UpdateEventForm from "./components/UpdateEventForm";
+import Footer from "./components/Footer";
 
 function App() {
   const [events, setEvents] = useState([]);
@@ -39,6 +40,7 @@ function App() {
     });
   }, []);
 
+ 
   function handleAddEvent(newEvent) {
     setEvents([...events, newEvent]);
   }
@@ -56,8 +58,9 @@ function App() {
         "loading ..."
       ) : (
         <>
+         
+          <NavBar isLoggedIn={isLoggedIn}/>
           <Header />
-          <NavBar isLoggedIn={isLoggedIn} />
           <main>
             <Routes>
               <Route
@@ -100,6 +103,7 @@ function App() {
               />
             </Routes>
           </main>
+          <Footer/>
         </>
       )}
     </div>

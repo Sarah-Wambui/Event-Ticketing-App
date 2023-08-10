@@ -77,8 +77,3 @@ function TicketCheckout() {
 }
 
 export default TicketCheckout
-
-
-
-
-

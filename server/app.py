@@ -104,7 +104,7 @@ class Login(Resource):
                     "username": user.username,
                     "email": user.email
                 }
-                expires = timedelta(hours=1)
+                expires = timedelta(minutes=30)
                 token = create_access_token(
                     identity=user.id, additional_claims=metadata, expires_delta=expires)
                 print({"token": token})

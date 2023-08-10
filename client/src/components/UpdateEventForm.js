@@ -134,6 +134,7 @@ function handleNextStep() {
             <> 
             <h3>Step 1: Basic Event Details</h3>        
             <div> 
+              <h3>Step 1: Basic Event Details</h3>
               <label className="form-label"> Title:</label>
               <input type="text" className="form-input" onChange={handleChange} name ="title" value={eventData.title} required/> 
               <label className="form-label"> Venue</label>
@@ -166,9 +167,9 @@ function handleNextStep() {
               <input type="text"onChange={handleChange} name ="image_url" value={eventData.image_url} required/> */}
               <label className="form-label" > Available Tickets:</label>
               <input type="number" className="form-input" onChange={handleChange} name ="available_tickets" value={eventData.available_tickets} required/>
-              <button type='button' className='form-button float-right' onClick={handleNextStep}>
+              <button type='button' className='form-button float-left' onClick={handleNextStep}>
                   <span className='top-key'></span>
-                  <span className='text'>Next</span>
+                  <span className='text'>Previous</span>
                   <span className='bottom-key-1'></span>
                   <span className='bottom-key-2'></span>
               </button>
