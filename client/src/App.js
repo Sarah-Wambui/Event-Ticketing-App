@@ -80,7 +80,7 @@ function App() {
                 element={
                   <AddEventForm
                     handleAddEvent={handleAddEvent}
-                    isLoggedIn={isLoggedIn}
+                    isLoggedIn={authenticatedUser}
                   />
                 }
               />
@@ -93,7 +93,7 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route
                 path="/:id/checkout/:product/:remaining_tickets"
-                element={<PaymentConfirmation events={events} setEvents={setEvents} />}
+                element={<PaymentConfirmation events={events} setEvents={setEvents}  isLoggedIn={authenticatedUser}/>}
               />
               <Route
                 path="/:id/update"

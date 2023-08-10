@@ -21,14 +21,6 @@ function AddEventForm({handleAddEvent, isLoggedIn}) {
   console.log(eventData)
   function handleSubmitForm(event) {
     event.preventDefault()
-    // if (eventData.ticket_price >= 0) {
-    //   alert("ticket_price should be  greater than or equal to 1");
-    //   return;
-    // }
-  //   if (eventData.available_tickets === 0) {
-  //     alert("Available tickets should be more than 0.");
-  //     return;
-  // }
     fetch("/events",{
     method:"POST",
     headers:{
@@ -93,6 +85,8 @@ function AddEventForm({handleAddEvent, isLoggedIn}) {
       navigate('/login');
     }
   }, [isLoggedIn, navigate]);
+
+
    function handleUploadImage(){
     const data = new FormData()
     data.append("file", image)

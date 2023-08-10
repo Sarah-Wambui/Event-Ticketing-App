@@ -75,8 +75,8 @@ class SignUp(Resource):
             msg.body = "Your account is created successfully"
             mail.send(msg)
 
-            return "Message sent"
-            print(user.to_dict())
+            # return "Message sent"
+            # print(user.to_dict())
             return make_response(jsonify(user.to_dict()), 201)
         except IntegrityError:
             print("no, here!")
@@ -104,7 +104,7 @@ class Login(Resource):
                     "username": user.username,
                     "email": user.email
                 }
-                expires = timedelta(minutes=30)
+                expires = timedelta(seconds=5)
                 token = create_access_token(
                     identity=user.id, additional_claims=metadata, expires_delta=expires)
                 print({"token": token})
@@ -159,7 +159,6 @@ class Events(Resource):
 api.add_resource(Events, "/events")
 
 
-# @app.route("/upload", methods=['POST'])
 class Upload(Resource):
     @cross_origin()
     def post(self):
