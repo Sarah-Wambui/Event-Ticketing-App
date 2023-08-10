@@ -57,8 +57,9 @@ function App() {
         "loading ..."
       ) : (
         <>
-          <Header />
+         
           <NavBar isLoggedIn={isLoggedIn} />
+          <Header />
           <main>
             <Routes>
               <Route
@@ -90,8 +91,8 @@ function App() {
               <Route path="/signup" element={<Signup />} />
               <Route path="/about" element={<About />} />
               <Route
-                path="/:id/checkout/:product"
-                element={<PaymentConfirmation />}
+                path="/:id/checkout/:product/:remaining_tickets"
+                element={<PaymentConfirmation events={events} setEvents={setEvents} />}
               />
               <Route
                 path="/:id/update"

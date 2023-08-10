@@ -4,7 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 function TicketCheckout() {
     let [count, setCount] = useState(1);
     const [checkout, setCheckout]= useState([])
-    // console.log(count)
+    console.log(count)
     const {id}=useParams()
     // console.log(id)
    
@@ -28,6 +28,8 @@ function TicketCheckout() {
         }
     }
     let product = count * checkout.ticket_price
+    let remaining_tickets = checkout.available_tickets - count
+    console.log(remaining_tickets)
 
     return (
         <div className="checkout-container">
@@ -67,9 +69,7 @@ function TicketCheckout() {
                 {count} * {checkout.ticket_price}:
               </p>
               <p>Total: {product}</p>
-              <Link to={`/:${id}/checkout/${product}`}>
-                <button className="checkout-button">CHECKOUT</button>
-              </Link>
+              <Link to= {`/${id}/checkout/${product}/${remaining_tickets}`}><button>CHECKOUT</button></Link>
             </div>
           </div>
         </div>

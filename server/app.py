@@ -83,7 +83,6 @@ class SignUp(Resource):
 
             return {"error": "422 Unprocessable request"}, 422
 
-
 api.add_resource(SignUp, "/signup")
 
 
@@ -102,7 +101,8 @@ class Login(Resource):
             if user.authenticate(password):
                 metadata = {
                     "is_attendee": user.is_attendee,
-                    "username": user.username
+                    "username": user.username,
+                    "email": user.email
                 }
                 expires = timedelta(minutes=30)
                 token = create_access_token(
@@ -126,9 +126,8 @@ def validate_token():
 def common():
     current_user_id = get_jwt_identity()
     user = User.query.get(current_user_id)
-    if user.is_attendee:
-        user.is_attendee = False
-        return "I am now an organizer"
+    if user:
+        print(user)
     return "I am still an attendee"
 
 
@@ -154,7 +153,7 @@ class Events(Resource):
             title=events["title"],
             venue=events["venue"],
             description=events["description"],
-            organizer=user.username,
+            organizer=events["organizer"],
             category=events["category"],
             image_url=events["image_url"],
             ticket_price=events["ticket_price"],
@@ -171,7 +170,7 @@ class Events(Resource):
 api.add_resource(Events, "/events")
 
 
-@app.route("/upload", methods=['POST'])
+# @app.route("/upload", methods=['POST'])
 class Upload(Resource):
     @cross_origin()
     def post(self):
@@ -183,7 +182,6 @@ class Upload(Resource):
             app.logger.info(upload_result)
 
             return jsonify(upload_result)
-
 
 api.add_resource(Upload, "/upload")
 
@@ -247,17 +245,24 @@ base_url = 'https://e90b-196-216-65-2.ngrok-free.app'
 request_bin_url = "https://enq9mf0wmqf8.x.pipedream.net/payments"
 
 # initiate M-PESA Express
-
+# @jwt_required()
 @app.route("/pay/<int:event_id>", methods=["POST"])
-def MpesaExpress():
-    # amount = request.args.get("amount")
-    # phone = request.args.get("phone")
-    current_user_id = get_jwt_identity()
-    user = User.query.get(current_user_id)
-    if user:
+@jwt_required()
+def MpesaExpress(event_id):
         data = request.get_json()
         amount = data.get("amount")
         phone = data.get("phone")
+
+        current_user_id = get_jwt_identity()  # Get the current user's ID
+        user = User.query.get(current_user_id)
+
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+    # Retrieve event details
+        event = Event.query.get(event_id)
+        if not event:
+            return jsonify({"error": "Event not found"}), 404
 
         endpoint = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
         access_token = getAccesstoken()
@@ -282,10 +287,18 @@ def MpesaExpress():
             "AccountReference": "TestPay",
             "TransactionDesc": "HelloTest",
             "Amount": amount
-        }
+        }       
 
         res = requests.post(endpoint, json=data, headers=headers).json()
         print(res)
+
+            # Send payment confirmation email to the user
+        msg = Message('Payment Confirmation',
+                    sender='your_email@example.com',
+                    recipients=[user.email])
+        msg.body = f'Hello {user.username},\n\nYour payment of {amount} for the event "{event.title}" has been successfully processed.\n\nThank you for your payment!'
+        mail.send(msg)
+
         return res
 
 
@@ -315,7 +328,25 @@ def incoming():
 
     return "ok"
 
+@app.route('/send_ticket_email/<int:event_id>', methods=['POST'])
+@jwt_required()  # Require authentication for this route
+def send_ticket_email(event_id):
+    current_user_id = get_jwt_identity()  # Get the current user's ID
+    user = User.query.get(current_user_id)
 
+    event = Event.query.get(event_id)
+    
+    if not user or not event:
+        return "User or event not found", 404
+
+    # Send email to the user
+    msg = Message('Ticket Purchase Confirmation',
+                  sender='your_email@example.com',
+                  recipients=[user.email])
+    msg.body = f'Hello {user.username},\n\nYou have successfully purchased a ticket for the event "{event.title}".\n\nThank you for your purchase!'
+    mail.send(msg)
+
+    return "Email sent", 200
 
 
 

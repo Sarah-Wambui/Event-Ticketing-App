@@ -1,60 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
-/* .card {
-  border: 1px solid blue;
-  display: flex; 
-  flex-direction: column;
-  align-items: center;
-  height: 60%;
-  position: relative;
-
-}
-
-.card>p{
-  margin: 0;
-}  */
-/* .event-item>h3{
-  margin: 2px;
-}
-.event-item>h4{
-  margin: 2px;
-} */
-/* .card img {
-  max-width: 100%;
-  height: auto;
-  margin-bottom: 0.5rem; */
-  /* display: block; */
-  
-/* }
-.card::after{
-  content:'';
-  width: 0;
-  height: 0;
-  position: absolute;
-  bottom: 5px;
-  transition: 0.5s;
-
-}
-.details{
-  position: absolute;
-  display: none;
-  opacity: 0;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #333;
-  color: white;
-
-} */
-/* .card:hover .event-details{
-  width: 100%;
-  display: block;
-  opacity: 1;
-} */
-/* .card:hover .details {
-  bottom: 0;
-} */
 
 *{
   margin: 0;
@@ -73,16 +18,15 @@
 
 .card {
   position: relative;
-  width: 100%;
-  max-width: 400px;
+  width: 340px;
   height: 450px;
-  margin: 0 auto;
   /* background:black; */
   border-radius: 6px;
   overflow: hidden;
   /* border: 1px solid; */
   box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
 }
+
 
 .poster {
   position: relative;
@@ -133,8 +77,8 @@
   left: 0;
   width: 100%;
   max-height: 0;
-  height: auto;
-  padding: 1.5em 1.5em 2em;
+  height: 0;
+  padding: 1.5em 1.5em 3.5em;
   backdrop-filter: blur(16px) saturate(120%);
   transition: .3s;
   color: #fff;
@@ -146,8 +90,11 @@
   align-items: flex-start;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
-  max-height: 250px;
+  max-height: 100%;
   overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(100%);
 }
 
 .detail-item {
@@ -169,7 +116,10 @@
 .card:hover .details {
   transform: translateY(0); 
   bottom: 0;
-  max-height: 250px;
+  height: auto;
+  max-height: 350px;
+  opacity: 1;
+  visibility: visible;
 }
 .ticket {
   position: absolute;
@@ -180,6 +130,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
+  margin: 0.5rem;
 }
 
 .content-container {
@@ -245,7 +196,7 @@
 }
 
 .menu a:hover {
-  color: #ff9900; /* Change this to the desired hover color */
+  color: #ff9900; 
 }
 
 @media (max-width: 768px) {
@@ -268,14 +219,14 @@
   margin: 0;
   outline: none;
   overflow: visible;
-  padding: 0.4rem;
+  padding: 0.4rem 0.8rem;
   position: relative;
   text-align: center;
   text-decoration: none;
   text-transform: none;
   transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
   user-select: none;
-  font-size: 14px;
+  font-size: 12px;
   margin-top: 0.6rem;
 }
 
@@ -387,6 +338,12 @@
 @media (max-width: 768px) {
   .event-container {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .ticket {
+    position: relative; 
+    right: auto;
+    margin-top: 0.5rem;
+    text-align: center;
   }
 }
 
@@ -696,7 +653,7 @@
   flex-direction: column;
   /* align-items: center; */
   gap: 1rem;
-  background: #f5f5f5; /* Adjust background color */
+  background: #f5f5f5; 
   border-radius: 8px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   width: 100%;
@@ -862,7 +819,7 @@
 .footer-container {
   background-color: #1E2A38;
   color: white;
-  padding: 2rem 0; /* Increase the vertical padding for more space */
+  padding: 2rem 0;
 }
 
 .footer-content {
@@ -875,40 +832,40 @@
 
 .footer-section {
   flex: 1;
-  padding: 1.5rem; /* Adjust the padding as needed */
-  max-width: 300px; /* Limit the maximum width of each section */
+  padding: 1.5rem;
+  max-width: 300px; 
 }
 
 .footer-section h4 {
   color: #FF9900;
-  margin-bottom: 1.5rem; /* Increase the margin for a visual effect */
+  margin-bottom: 1.5rem; 
 }
 
 .social-icons {
   display: flex;
-  gap: 1.5rem; /* Increase the gap for more spacing between icons */
-  margin-top: 1.5rem; /* Add margin to the top for space */
+  gap: 1.5rem; 
+  margin-top: 1.5rem; 
 }
 
 .social-icons a {
   color: white;
-  font-size: 1.75rem; /* Slightly larger icon size */
+  font-size: 1.75rem; 
 }
 
 .footer-bottom {
   text-align: center;
-  margin-top: 2.5rem; /* Increase the top margin for more space */
+  margin-top: 2.5rem; 
   padding-top: 1rem;
   border-top: 1px solid rgba(255, 255, 255, 0.2);
   width: 100%;
 }
 
 .footer-bottom p {
-  font-size: 1rem; /* Slightly larger font size */
+  font-size: 1rem;
   color: rgba(255, 255, 255, 0.7);
   margin: 0;
   padding: 0;
-  margin-top: 1rem; /* Adjust this value to vertically position the text */
+  margin-top: 1rem; 
 }
 
 
@@ -947,4 +904,87 @@
   font-size: 1.1rem;
   line-height: 1.8;
   margin-bottom: 2rem;
+}
+
+/* SEARCH AND HEADER CSS */
+.search {
+  text-align: center;
+  padding: 1rem;
+  margin: 10px 0;
+  width: 20%;
+}
+/* Search Input Styles */
+.search-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Align to the right */
+  margin: 20px;
+}
+.search-input {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px 15px;
+  font-size: 18px;
+  border: none;
+  border-radius: 25px;
+  background-color: gray; /* Blue background color */
+  color:white; /* White text color on blue background */
+  transition: background-color 0.3s ease;
+}
+.search-input:focus {
+  outline: none;
+  background-color:#333; /* Darker blue on focus */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+/* Header.css */
+/* Header.css */
+.header {
+  margin-top: -20px; /* Adjust this value as needed */
+  background-image: url('https://img.freepik.com/free-vector/show-dance-floor-vector-background-with-spotlights-party-concert-stage-floor-illustration_1284-42341.jpg?w=826&t=st=1691654327~exp=1691654927~hmac=09867acf7b5d5f5ea6f46c06bc3e38c09dec59765c99f929ae0cd97050ccc96a');
+  background-size: cover;
+  background-position: center;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+/* App.css */
+/* ... (previous styles) ... */
+.header-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 40px;
+  color: white;
+  text-align: left;
+  /* background-color: rgba(0, 0, 0, 0.5); */
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  width: 60%;
+  font-family: 'Arial', sans-serif;
+}
+.header-title h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: bold; /* Make the title bold */
+}
+.header-description {
+  margin-top: 20px;
+  font-size: 20px; /* Increase the font size */
+  line-height: 1.6;
+  color: #FFFFFF;
+  text-align: justify;
+  font-weight: bold; /* Make the description bold */
+}
+/* Add a subtle background color */
+.header-description::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* background-color: rgba(0, 0, 0, 0.2); */
+  z-index: -1;
 }
