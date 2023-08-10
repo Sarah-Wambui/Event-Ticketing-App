@@ -27,26 +27,42 @@ function PaymentConfirmation() {
     }
    
     return (
-        <div>
-            <p><b>Total Amount: <span>Kshs.</span></b>{product}</p>
-            <form onSubmit={handleSubmit}>
-                <h4>Payment Method: Mpesa</h4>
-                <label>Phone Number</label>
-                <br/>
-           
-                <input type="text" onChange={(e) => setPhone(e.target.value)} autoComplete='off' required name="phone" value={phone} pattern="^254\d{9}$"
-                    title="Please enter a valid phone number in the format '254712345678'."
-                    placeholder="254712345678"/> <br />
-                <br/>
-                <label>Amount</label>
-                <br/>
-                <input type="text" onChange={(e) => setAmount(e.target.value)} autoComplete='off' required name="amount" value={product} />
-
-                <br/>
-                <button type="submit">Confirm Payment</button>
-            </form>
+        <div className="payment-container">
+          <form className="payment-form" onSubmit={handleSubmit}>
+            <h4 className="payment-method">Payment Method: Mpesa</h4>
+            <p className="payment-total">
+                <b>Total Amount: <span>Kshs.</span></b>
+                {product}
+            </p>
+            <label className="payment-label">Phone Number:</label>
+            <input
+              type="text"
+              onChange={(e) => setPhone(e.target.value)}
+              autoComplete="off"
+              required
+              name="phone"
+              value={phone}
+              pattern="^254\d{9}$"
+              title="Please enter a valid phone number in the format '254712345678'."
+              placeholder="254712345678"
+              className="payment-input"
+            />
+            <label className="payment-label">Amount:</label>
+            <input
+              type="text"
+              onChange={(e) => setAmount(e.target.value)}
+              autoComplete="off"
+              required
+              name="amount"
+              value={product}
+              className="payment-input"
+            />
+            <button type="submit" className="payment-button">
+              Confirm Payment
+            </button>
+          </form>
         </div>
-    );
+      );
 }
 
 export default PaymentConfirmation;
