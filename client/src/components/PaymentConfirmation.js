@@ -48,6 +48,7 @@ function PaymentConfirmation({ events, setEvents }) {
                 console.log(updatedEvents);
                 setEvents(updatedEvents);
                 console.log(updatedEvents);
+                alert("Payment successful!")
             });
     }
 

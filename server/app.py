@@ -69,10 +69,10 @@ class SignUp(Resource):
             db.session.commit()
 
 
-            msg = Message('Hello from the other side!',
-                 sender =   'rogonykiplagat@gmail.com', 
+            msg = Message('Welcome to EventGo ticketing app!',
+                 sender =   'reventgoticketing@gmail.com', 
                  recipients = [email])
-            msg.body = "Your account is created successfully"
+            msg.body = "Your account has been created successfully"
             mail.send(msg)
 
             # return "Message sent"
@@ -104,11 +104,11 @@ class Login(Resource):
                     "username": user.username,
                     "email": user.email
                 }
-                expires = timedelta(seconds=5)
+                expires = timedelta(minutes=30)
                 token = create_access_token(
                     identity=user.id, additional_claims=metadata, expires_delta=expires)
                 print({"token": token})
-                return jsonify({"token": token, "user_id": user.id})
+                return jsonify({"token": token, "user_id": user.id, "email": user.email})
         return make_response(jsonify({"error": "Invalid details"}), 401)
 
 
@@ -282,9 +282,9 @@ def MpesaExpress(event_id):
 
             # Send payment confirmation email to the user
         msg = Message('Payment Confirmation',
-                    sender='your_email@example.com',
+                    sender='eventgoticketing@gmail.com',
                     recipients=[user.email])
-        msg.body = f'Hello {user.username},\n\nYour payment of {amount} for the event "{event.title}" has been successfully processed.\n\nThank you for your payment!'
+        msg.body = f'Hello {user.username},\n\nYou have successfully purchased a ticket for the event "{event.title}".\n\nThank you for your purchase!\n\n Please present this ticket at the event entrance for verification.\n\n Here are your ticket details:\n\n Event: {event.title}\n\n Date: {event.date_time}\n\n Venue: {event.venue}\n\n Please present this ticket at the event entrance for verification.\n\nWe look forward to seeing you there!\n\nBest regards, The {event.organizer} Team'
         mail.send(msg)
 
         return res

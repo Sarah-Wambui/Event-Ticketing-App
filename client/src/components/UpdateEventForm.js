@@ -134,7 +134,7 @@ function handleNextStep() {
             <> 
             <h3>Step 1: Basic Event Details</h3>        
             <div> 
-              <h3>Step 1: Basic Event Details</h3>
+              {/* <h3>Step 1: Basic Event Details</h3> */}
               <label className="form-label"> Title:</label>
               <input type="text" className="form-input" onChange={handleChange} name ="title" value={eventData.title} required/> 
               <label className="form-label"> Venue</label>
@@ -167,16 +167,16 @@ function handleNextStep() {
               <input type="text"onChange={handleChange} name ="image_url" value={eventData.image_url} required/> */}
               <label className="form-label" > Available Tickets:</label>
               <input type="number" className="form-input" onChange={handleChange} name ="available_tickets" value={eventData.available_tickets} required/>
-              <button type='button' className='form-button float-left' onClick={handleNextStep}>
+              <button type='button' className='form-button float-left'onClick={handlePrevStep} >
                   <span className='top-key'></span>
                   <span className='text'>Previous</span>
                   <span className='bottom-key-1'></span>
                   <span className='bottom-key-2'></span>
               </button>
               {eventData.ticket_price>=0 && eventData.available_tickets>=1 ? (
-              <button type='button' className='form-button float-right' onClick={handlePrevStep}>
+              <button type='button' className='form-button float-right' onClick={handleNextStep}>     
                 <span className='top-key'></span>
-                <span className='text'>Previous</span>
+                <span className='text'>Next</span>
                 <span className='bottom-key-1'></span>
                 <span className='bottom-key-2'></span>
               </button>
@@ -192,20 +192,8 @@ function handleNextStep() {
             {/* <form onSubmit={handleSubmitForm}>  */}
               <label className="form-label"> Date & Time:</label>
               <input type="text" className="form-input" onChange={handleChange} name ="date_time" value={eventData.date_time} required/>
-              <button type='button' className='form-button' onClick={handlePrevStep}>
-                <span className='top-key'></span>
-                <span className='text'>Previous</span>
-                <span className='bottom-key-1'></span>
-                <span className='bottom-key-2'></span>
-              </button>
-              <button type='submit' className='form-button float-right'>
-                <span className='top-key'></span>
-                <span className='text'>Update Event</span>
-                <span className='bottom-key-1'></span>
-                <span className='bottom-key-2'></span>
-              </button>
-        </div> 
-        <div>
+
+              <div>
                 <label className='form-label'>Image:</label>
                 <div className='file-input-container'>
                   <input
@@ -214,10 +202,23 @@ function handleNextStep() {
                     onChange={(e) => setImage(e.target.files[0])}
                     required
                   />
-                  <button onClick={handleUploadImage}>Upload Image</button>
+                  <button  type="button" onClick={handleUploadImage}>Upload Image</button>
                 </div>
               </div>
-      
+              <button type='button' className='form-button' onClick={handlePrevStep}>
+                <span className='top-key'></span>
+                <span className='text'>Previous</span>
+                <span className='bottom-key-1'></span>
+                <span className='bottom-key-2'></span>
+              </button>
+              <button type='submit' className='form-button float-right' onClick={() => alert("Event Updated Successfully!")}>
+                <span className='top-key'></span>
+                <span className='text'>Update Event</span>
+                <span className='bottom-key-1'></span>
+                <span className='bottom-key-2'></span>
+              </button>
+        </div> 
+
       </>             
       )}
     </form>  

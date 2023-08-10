@@ -183,6 +183,7 @@
 
 .menu li {
   margin-right: 20px;
+  color: #000;
 }
 
 .menu li:last-child {
@@ -987,6 +988,9 @@
   height: 100%;
   /* background-color: rgba(0, 0, 0, 0.2); */
   z-index: -1;
+}
+.logout{
+
 }
 @media (min-width: 320px) and (max-width: 480px) {
   /* Adjust styles for phone screens */

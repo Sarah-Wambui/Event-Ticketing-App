@@ -18,6 +18,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [authenticatedUser, setAuthenticatedUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [email, setEmail] = useState(null)
 
   // console.log(events)
   useEffect(() => {
@@ -48,6 +49,7 @@ function App() {
   function handleSuccessfulLogin(data) {
     setIsLoggedIn(true);
     setAuthenticatedUser(data.user_id);
+    setEmail(data.email)
     localStorage.setItem("access_token", data.token);
   }
   // console.log(authenticatedUser)
@@ -59,7 +61,7 @@ function App() {
       ) : (
         <>
          
-          <NavBar isLoggedIn={setAuthenticatedUser}/>
+          <NavBar isLoggedIn={setAuthenticatedUser} email={email} />
           <Header />
           <main>
             <Routes>
