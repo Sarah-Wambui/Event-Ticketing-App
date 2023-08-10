@@ -59,7 +59,7 @@ function App() {
       ) : (
         <>
          
-          <NavBar isLoggedIn={isLoggedIn}/>
+          <NavBar isLoggedIn={setAuthenticatedUser}/>
           <Header />
           <main>
             <Routes>

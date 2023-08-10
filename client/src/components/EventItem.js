@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 // import UpdateEventForm from "./UpdateEventForm"
 
 
@@ -22,7 +22,17 @@ const EventItem = ({ user, event, setEvents, events }) => {
             setEvents(updatedEvents)
         })
     }
+    
+    const navigate = useNavigate()
+    function handleTickets(){
+        if(user){
+            // <Link  to={`/${id}` }></Link>
+            navigate(`/${id}`)
 
+        }else{
+            alert("Please log in first to buy tickets.")
+        }
+    }
 
     return (
         <div className='card'>
@@ -67,14 +77,14 @@ const EventItem = ({ user, event, setEvents, events }) => {
                             <button className='delete-btn' onClick={() => handleDelete(id)}>Delete</button> 
                           </>
                         ) : (
-                            <Link to ={`/${id}` }> 
-                                <button className="fancy">
+                            // <Link to ={`/${id}` }> 
+                                <button className="fancy" onClick={handleTickets} >
                                     <span className="top-key"></span>
                                     <span className="text">Buy Tickets</span>
                                     <span className="bottom-key-1"></span>
                                     <span className="bottom-key-2"></span>
                                 </button>
-                            </Link> 
+                            // </Link> 
                         )}
                         {/*  */}
                     </div>

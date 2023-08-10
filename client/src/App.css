@@ -988,3 +988,108 @@
   /* background-color: rgba(0, 0, 0, 0.2); */
   z-index: -1;
 }
+@media (min-width: 320px) and (max-width: 480px) {
+  /* Adjust styles for phone screens */
+  .event-container {
+    grid-template-columns: repeat(1, 1fr);
+    padding: 0.5rem;
+  }
+  .header {
+    height: 300px;
+  }
+  .header-content {
+    width: 100%;
+    padding: 15px;
+  }
+  .header-title h1 {
+    font-size: 2rem;
+  }
+  .header-description {
+    font-size: 18px;
+  }
+  .header{
+    width: 100%;
+    border-radius: 5px;
+  }
+  .footer-container{
+    width: 100%;
+    border-radius: 5px;
+  }
+  .navbar{
+    width: 100%;
+  }
+  .card{
+    width: 100%;
+  }
+}
+/* Media query for tablets screens */
+@media (min-width: 481px) and (max-width:768px){
+  /*  tablets screens */
+  .event-container {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 1rem;
+  }
+  .header-content {
+    width: 100%;
+    padding: 20px;
+  }
+  .header{
+    width: 136%;
+    border-radius: 5px;
+  }
+  .footer-container{
+    width: 136%;
+    border-radius: 5px;
+  }
+  .navbar{
+    width: 136%;
+  }
+}
+/* Media query for laptop screens */
+@media (min-width:769px) and (max-width: 1024px) {
+  /* Adjust styles for laptop screens */
+  .event-container {
+    grid-template-columns: repeat(3, 1fr);
+    padding: 2rem;
+  }
+  .header-content {
+    width: 100%;
+    padding: 20px;
+  }
+  .header{
+    width: 129%;
+    border-radius: 5px;
+  }
+  .footer-container{
+    width: 129%;
+    border-radius: 5px;
+  }
+  .navbar{
+    width: 129%;
+  }
+}
+/* Media query for Desktop, large screens */
+@media (min-width: 1025px) and (max-width:1200px) {
+  /* Adjust styles for Desktop, large screens */
+  .event-container {
+    grid-template-columns: repeat(4, 1fr);
+    padding: 3rem;
+  }
+  .header-content {
+    width: 100%;
+    padding: 20px;
+  }
+  .header{
+    width: 140%;
+    border-radius: 6px;
+  }
+  .footer-container{
+    width: 140%;
+    border-radius: 5px;
+    font-size: 1.5rem;
+  }
+  .navbar{
+    width: 140%;
+    font-size: 1.5rem;
+  }
+}
