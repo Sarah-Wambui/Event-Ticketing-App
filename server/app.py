@@ -1,9 +1,9 @@
-from config import app, db, api
+from config import app, db, api, jwt
 from flask_restful import Resource
 from models import User, Event, Ticket
 from flask import make_response, jsonify, request
 from sqlalchemy.exc import IntegrityError
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, get_jwt
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from flask_mail import Message
 from config import mail
 import requests
@@ -104,7 +104,7 @@ class Login(Resource):
                     "username": user.username,
                     "email": user.email
                 }
-                expires = timedelta(minutes=30)
+                expires = timedelta(hours=1)
                 token = create_access_token(
                     identity=user.id, additional_claims=metadata, expires_delta=expires)
                 print({"token": token})
@@ -118,17 +118,6 @@ api.add_resource(Login, "/login")
 @jwt_required()
 def validate_token():
     pass
-
-
-
-@app.route("/common")
-@jwt_required()
-def common():
-    current_user_id = get_jwt_identity()
-    user = User.query.get(current_user_id)
-    if user:
-        print(user)
-    return "I am still an attendee"
 
 
 class Events(Resource):

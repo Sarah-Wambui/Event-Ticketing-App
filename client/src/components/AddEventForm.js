@@ -109,7 +109,6 @@ function AddEventForm({handleAddEvent, isLoggedIn}) {
   }, [isLoggedIn, navigate]);
 
    function handleUploadImage(){
-    // event.preventDefault()
     const data = new FormData()
     data.append("file", image)
     data.append("cloud_name", "eventgo")
@@ -192,18 +191,7 @@ function AddEventForm({handleAddEvent, isLoggedIn}) {
               <label className='form-label' > Date & Time:</label>
               <input type="text" className='form-input' onChange={handleChange} name ="date_time" value={eventData.date_time} pattern="^(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[0-2])/\d{4}\s([01]?[0-9]|2[0-3]):[0-5][0-9]\s(?:AM|PM|hrs)$"
                     title="Please enter a valid date and time in the format 'dd/mm/yyyy hh:mm hrs'." placeholder='dd/mm/yyyy hh:mm hrs'required/>
-              <div>
-                <label className='form-label'>Image:</label>
-                <div className='file-input-container'>
-                  <input
-                    type='file'
-                    className='form-input'
-                    onChange={(e) => setImage(e.target.files[0])}
-                    required
-                  />
-                  <button onClick={handleUploadImage}>Upload Image</button>
-                </div>
-              </div>
+
               <button type='button' className='form-button' onClick={handlePrevStep}>
                 <span className='top-key'></span>
                 <span className='text'>Previous</span>
@@ -217,6 +205,18 @@ function AddEventForm({handleAddEvent, isLoggedIn}) {
                 <span className='bottom-key-2'></span>
               </button>
             </form>
+            <div>
+                <label className='form-label'>Image:</label>
+                <div className='file-input-container'>
+                  <input
+                    type='file'
+                    className='form-input'
+                    onChange={(e) => setImage(e.target.files[0])}
+                    required
+                  />
+                  <button onClick={handleUploadImage}>Upload Image</button>
+                </div>
+              </div>
         </div>
       )}
     </div>

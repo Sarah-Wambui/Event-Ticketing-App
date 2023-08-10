@@ -60,3 +60,6 @@ CORS(app)
 api = Api(app)
 
 jwt = JWTManager(app)
+
+
+

@@ -4,6 +4,9 @@ import { useParams } from 'react-router-dom';
 
 function UpdateEventForm({setEvents, events}) {
   const [step, setStep] = useState(1);
+  const [image, setImage] = useState("")
+  const [url, setUrl] = useState("")
+  console.log(url)
   const {id} = useParams()
   
   const [event, setEvent] = useState([])
@@ -74,6 +77,25 @@ function UpdateEventForm({setEvents, events}) {
     });
 };
 
+function handleUploadImage(){
+  const data = new FormData()
+  data.append("file", image)
+  data.append("cloud_name", "eventgo")
+  fetch("/upload", {
+    method: "POST",
+    body: data
+  })
+  .then((resp) => resp.json())
+  .then(data=> {
+    setUrl(data.url)
+    setEventData((prevEventData) => ({
+      ...prevEventData,
+      image_url: data.url
+    }));
+  })
+  .catch(error => console.log("could not post image", error))
+ }
+
 function handleNextStep() {
   if (eventData.description.length === 0 || eventData.title.length === 0 || eventData.venue.length === 0) {
       alert("Please fill in all the required fields.");
@@ -107,8 +129,10 @@ function handleNextStep() {
   return (
     <div className='form-container'>
         <form onSubmit={handleSubmitForm}>
-          <h3>Step 1: Basic Event Details</h3>
-          { step === 1 && (           
+          
+          { step === 1 && ( 
+            <> 
+            <h3>Step 1: Basic Event Details</h3>        
             <div> 
               <label className="form-label"> Title:</label>
               <input type="text" className="form-input" onChange={handleChange} name ="title" value={eventData.title} required/> 
@@ -129,6 +153,7 @@ function handleNextStep() {
               </button>
             ) : null}
             </div>
+            </> 
           )}
   
       { step === 2 && (
@@ -148,9 +173,9 @@ function handleNextStep() {
                   <span className='bottom-key-2'></span>
               </button>
               {eventData.ticket_price>=0 && eventData.available_tickets>=1 ? (
-              <button type='button' className='form-button float-right' onClick={handleNextStep}>
+              <button type='button' className='form-button float-right' onClick={handlePrevStep}>
                 <span className='top-key'></span>
-                <span className='text'>Next</span>
+                <span className='text'>Previous</span>
                 <span className='bottom-key-1'></span>
                 <span className='bottom-key-2'></span>
               </button>
@@ -160,6 +185,7 @@ function handleNextStep() {
       )}
 
       { step === 3 && (
+          <>
         <div>
           <h3>Step 3: Location and Date/Time</h3>
             {/* <form onSubmit={handleSubmitForm}>  */}
@@ -177,9 +203,21 @@ function handleNextStep() {
                 <span className='bottom-key-1'></span>
                 <span className='bottom-key-2'></span>
               </button>
-            {/* </form> */}
-        </div>
-        
+        </div> 
+        <div>
+                <label className='form-label'>Image:</label>
+                <div className='file-input-container'>
+                  <input
+                    type='file'
+                    className='form-input'
+                    onChange={(e) => setImage(e.target.files[0])}
+                    required
+                  />
+                  <button onClick={handleUploadImage}>Upload Image</button>
+                </div>
+              </div>
+      
+      </>             
       )}
     </form>  
     </div>

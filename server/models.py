@@ -1,6 +1,7 @@
 from config import db, bcrypt
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy_serializer import SerializerMixin
+import datetime
 
 
 class User(db.Model, SerializerMixin):
@@ -80,7 +81,7 @@ class Ticket(db.Model, SerializerMixin):
     def __repr__(self):
         return f"Tickect {self.ticket_number}."
     
-    
+
 # class Stk_push():
 
 #     user_id= db.Column(db.Integer)
