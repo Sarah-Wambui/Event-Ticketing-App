@@ -19,6 +19,9 @@ honcho = "*"
 gunicorn = "*"
 psycopg2-binary = "*"
 flask-swagger-ui = "*"
+requests = "*"
+cloudinary = "*"
+datetime = "*"
 
 [dev-packages]
 
