@@ -155,8 +155,8 @@
 }
 /* navbar styles */
 .navbar {
-  background-color: #ADB3BC;
-  color: #749EB2;
+  background-color: #fff;
+  color: #0c3547;
   padding: 20px 15px;
   /* margin-bottom: 1rem; */
 }
@@ -171,7 +171,7 @@
 }
 
 .logo {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: bold;
 }
 
@@ -947,28 +947,30 @@
   height: 400px;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   position: relative;
 }
 /* App.css */
 /* ... (previous styles) ... */
 .header-content {
-  position: absolute;
-  top: 0;
+  position: absolute; 
+  top: 50%;
   left: 0;
+  transform: translateY(-50%);
   padding: 40px;
   color: white;
   text-align: left;
   /* background-color: rgba(0, 0, 0, 0.5); */
   border-radius: 10px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-  width: 60%;
+  width: 100%;
   font-family: 'Arial', sans-serif;
 }
 .header-title h1 {
-  margin: 0;
-  font-size: 2.5rem;
-  font-weight: bold; /* Make the title bold */
+  /* margin-top: 50px; */
+  font-size: 3rem;
+  font-weight: bold;
+
 }
 .header-description {
   margin-top: 20px;
@@ -990,7 +992,14 @@
   z-index: -1;
 }
 .logout{
-
+  background-color: #ADB3BC;
+  color: #050606;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 @media (min-width: 320px) and (max-width: 480px) {
   /* Adjust styles for phone screens */

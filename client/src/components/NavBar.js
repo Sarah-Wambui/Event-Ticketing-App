@@ -16,7 +16,7 @@ const NavBar = ({email}) => {
         <nav className='navbar' >
             <div className='container'>
                 <div className='logo' >
-                    LOGO
+                    EVENTGO
                 </div>
                 <div className='menu'>
                     <ul>
