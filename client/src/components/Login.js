@@ -3,13 +3,8 @@ import {useNavigate, Link} from "react-router-dom"
 
 
 function Login({onLogin}) {
-  // const [user, setUser]= useState(null)
   const [email, setEmail]=useState("")
   const [password, setPassword]=useState("")
-  // console.log(setUser)
-
-
-  // console.log(user)
 
   const navigate= useNavigate()
 
@@ -50,10 +45,6 @@ function Login({onLogin}) {
     
   }
 
-  // if (password.length !== 6) {
-  //   alert('Password must be exactly 6 characters long.');
-  //   return;
-  // }
 
   return (
     <div className="login-container">

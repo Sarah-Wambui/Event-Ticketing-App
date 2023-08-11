@@ -1,5 +1,9 @@
 import React from 'react'
+
+
 function Search({events, setEvents}) {
+
+
     function handleSearch(e){
         const search = e.target.value.toLowerCase();
         if (search === '') {
@@ -13,6 +17,8 @@ function Search({events, setEvents}) {
             setEvents(filteredNames);
         }
     }
+
+    
     return (
       <div className="search-container">
         <input

@@ -56,11 +56,6 @@ function Signup() {
    
     }
 
-    // if (password.length !== 6) {
-    //   alert('Password must be exactly 6 characters long.');
-    //   return;
-    // }
-
 
     return (
       <div className="signup-container">

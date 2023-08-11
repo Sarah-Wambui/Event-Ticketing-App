@@ -1,7 +1,7 @@
-from config import app, db, api, jwt
+from config import app, db, api
 from flask_restful import Resource
 from models import User, Event, Ticket
-from flask import make_response, jsonify, request
+from flask import make_response, jsonify, request, render_template
 from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from flask_mail import Message
@@ -23,12 +23,10 @@ cloudinary.config(
 )
 
 
-class Home(Resource):
-    def get(self):
-        return "message: Welcome to Event Ticketing"
-
-
-api.add_resource(Home, "/")
+@app.route('/')
+@app.route('/<int:id>')
+def index(id=0):
+    return render_template("index.html")
 
 
 class Users(Resource):
@@ -74,12 +72,8 @@ class SignUp(Resource):
                  recipients = [email])
             msg.body = "Your account has been created successfully"
             mail.send(msg)
-
-            # return "Message sent"
-            # print(user.to_dict())
             return make_response(jsonify(user.to_dict()), 201)
         except IntegrityError:
-            print("no, here!")
 
             return {"error": "422 Unprocessable request"}, 422
 
@@ -95,8 +89,6 @@ class Login(Resource):
 
         user = User.query.filter(User.email == email).first()
 
-        print("Get the token!")
-
         if user:
             if user.authenticate(password):
                 metadata = {
@@ -107,12 +99,10 @@ class Login(Resource):
                 expires = timedelta(minutes=30)
                 token = create_access_token(
                     identity=user.id, additional_claims=metadata, expires_delta=expires)
-                print({"token": token})
                 return jsonify({"token": token, "user_id": user.id, "email": user.email})
         return make_response(jsonify({"error": "Invalid details"}), 401)
-
-
 api.add_resource(Login, "/login")
+
 
 @app.route("/token/validate")
 @jwt_required()
@@ -154,8 +144,6 @@ class Events(Resource):
         db.session.add(new_event)
         db.session.commit()
         return make_response(jsonify(new_event.to_dict()), 201)
-
-
 api.add_resource(Events, "/events")
 
 
@@ -212,9 +200,9 @@ class EventById(Resource):
         db.session.commit()
 
         return {}, 200
-
-
 api.add_resource(EventById, "/events/<int:id>")
+
+
 
 
 # get access token from mpesa
@@ -225,7 +213,6 @@ def getAccesstoken():
 
     data = (requests.get(endpoint, auth=HTTPBasicAuth(
         consumer_key, consumer_secret))).json()
-    print(data)
     return data["access_token"]
 
 
@@ -254,7 +241,6 @@ def MpesaExpress(event_id):
 
         endpoint = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
         access_token = getAccesstoken()
-        print(access_token)
         headers = {"Authorization": "Bearer %s" % access_token}
         Timestamp = datetime.now()
         times = Timestamp.strftime("%Y%m%d%H%M%S")
@@ -278,7 +264,6 @@ def MpesaExpress(event_id):
         }       
 
         res = requests.post(endpoint, json=data, headers=headers).json()
-        print(res)
 
             # Send payment confirmation email to the user
         msg = Message('Payment Confirmation',
@@ -293,7 +278,6 @@ def MpesaExpress(event_id):
 @app.route('/tickets', methods=['POST'])
 def incoming():
     data = request.get_json()
-    print(data)
     amount = data.get("Body", {}).get("stkCallback", {}).get(
         "CallbackMetadata", {}).get("Item", [])[0].get("Value")
     phone_number = data.get("Body", {}).get("stkCallback", {}).get(
@@ -315,28 +299,6 @@ def incoming():
         db.session.commit()
 
     return "ok"
-
-@app.route('/send_ticket_email/<int:event_id>', methods=['POST'])
-@jwt_required()  # Require authentication for this route
-def send_ticket_email(event_id):
-    current_user_id = get_jwt_identity()  # Get the current user's ID
-    user = User.query.get(current_user_id)
-
-    event = Event.query.get(event_id)
-    
-    if not user or not event:
-        return "User or event not found", 404
-
-    # Send email to the user
-    msg = Message('Ticket Purchase Confirmation',
-                  sender='your_email@example.com',
-                  recipients=[user.email])
-    msg.body = f'Hello {user.username},\n\nYou have successfully purchased a ticket for the event "{event.title}".\n\nThank you for your purchase!'
-    mail.send(msg)
-
-    return "Email sent", 200
-
-
 
 if __name__ == "__main__":
     app.run(port=5555, debug=True)

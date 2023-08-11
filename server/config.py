@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
@@ -5,12 +6,21 @@ from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
-from flask_mail import Mail, Message
+from flask_mail import Mail
 from flask_swagger_ui import get_swaggerui_blueprint
+from dotenv import load_dotenv
+load_dotenv()
 
-app = Flask(__name__)
+# app = Flask(__name__)
+app = Flask(
+    __name__,
+    static_url_path='',
+    static_folder='../client/build',
+    template_folder='../client/build'
+)
 app.config["SECRET_KEY"] = b'r\xdd\x9d0\x9e\x04O\x1b\x8f\xb7H\xa5\xe8\x87\xad\x99'
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///event.db"
+# app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///event.db"
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
 app.config["SQLALCHEMY_TRACK_MODIFICATION"] = False
 app.json.compact = False
 
@@ -26,14 +36,6 @@ swaggerui_blueprint = get_swaggerui_blueprint(
     config={  # Swagger UI config overrides
         'app_name': "Test application"
     },
-    # oauth_config={  # OAuth config. See https://github.com/swagger-api/swagger-ui#oauth2-configuration .
-    #    'clientId': "your-client-id",
-    #    'clientSecret': "your-client-secret-if-required",
-    #    'realm': "your-realms",
-    #    'appName': "your-app-name",
-    #    'scopeSeparator': " ",
-    #    'additionalQueryStringParams': {'test': "hello"}
-    # }
 )
 
 app.register_blueprint(swaggerui_blueprint)

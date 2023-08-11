@@ -1,12 +1,10 @@
 import React from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-// import UpdateEventForm from "./UpdateEventForm"
 
 
 
 const EventItem = ({ user, event, setEvents, events }) => {
     const {id, title, venue, description, organizer, image_url, category, ticket_price, available_tickets,  date_time , user_id} = event
-    // tickets_sold,
 
     function handleDelete(id){
         console.log(id)

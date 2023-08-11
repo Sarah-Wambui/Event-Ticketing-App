@@ -82,28 +82,6 @@ class Ticket(db.Model, SerializerMixin):
         return f"Tickect {self.ticket_number}."
     
 
-# class Stk_push():
-
-#     user_id= db.Column(db.Integer)
-#     event_id=db.Column(db.Integer)
-#     request_id=
-#     amount
-#     phone_number
-#     descrption
-    
-
-# class Payment(db.Model, SerializerMixin):
-#     __tablename__ = "payments"
-
-#     id = db.Column(db.Integer, primary_key=True)
-#     amount = db.Column(db.Integer)
-#     phone_number = db.Column(db.String)
-#     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-#     event_id = db.Column(db.Integer, db.ForeignKey("events.id"))
-#     serialize_rules = ("-user.payments", "-event.payments",)
-
-#     def __repr__(self):
-#         return f"Payment {self.amount}"
     
 
 

@@ -1,5 +1,7 @@
 import React,{useState, useEffect} from 'react'
 import {useNavigate} from "react-router-dom"
+
+
 function AddEventForm({handleAddEvent, isLoggedIn}) {
   const [step, setStep] = useState(1);
   const [image, setImage] = useState("")
@@ -19,6 +21,8 @@ function AddEventForm({handleAddEvent, isLoggedIn}) {
     date_time:"",
   })
   console.log(eventData)
+
+
   function handleSubmitForm(event) {
     event.preventDefault()
     fetch("/events",{
@@ -45,6 +49,8 @@ function AddEventForm({handleAddEvent, isLoggedIn}) {
       date_time:"",
     })
   }
+
+
   function handleChange(event) {
     const { name, value } = event.target;
     const newValue = value;
@@ -53,6 +59,8 @@ function AddEventForm({handleAddEvent, isLoggedIn}) {
       [name]:newValue,
     }));
   }
+
+
   function handleNextStep() {
     if (eventData.description.length === 0 || eventData.title.length === 0 || eventData.venue.length === 0 || eventData.category.length === 0 || eventData.organizer.length === 0) {
         alert("Please fill in all the required fields.");
@@ -76,6 +84,8 @@ function AddEventForm({handleAddEvent, isLoggedIn}) {
         }
     }
   }
+
+  
   function handlePrevStep(){
     setStep((prevStep) => prevStep - 1);
   }
@@ -114,9 +124,20 @@ function AddEventForm({handleAddEvent, isLoggedIn}) {
           
           { step === 1 && ( 
             <> 
-            <h3>Step 1: Basic Event Details</h3>        
+            <h3>Step 1: Basic Event Details</h3> 
+            <div>
+          <label className='form-label'>Image:</label>
+          <div className='file-input-container'>
+            <input
+              type='file'
+              className='form-input'
+              onChange={(e) => setImage(e.target.files[0])}
+              required
+            />
+            <button  type="button" onClick={handleUploadImage}>Upload Image</button>
+          </div>
+        </div>       
             <div> 
-              {/* <h3>Step 1: Basic Event Details</h3> */}
               <label className="form-label"> Title:</label>
               <input type="text" className="form-input" onChange={handleChange} name ="title" value={eventData.title} required/> 
               <label className="form-label"> Venue</label>
@@ -163,7 +184,6 @@ function AddEventForm({handleAddEvent, isLoggedIn}) {
                 <span className='bottom-key-2'></span>
               </button>
             ) : null}
-            {/* </form> */}
         </div>
       )}
 
@@ -171,7 +191,6 @@ function AddEventForm({handleAddEvent, isLoggedIn}) {
           <>
         <div>
           <h3>Step 3: Location and Date/Time</h3>
-            {/* <form onSubmit={handleSubmitForm}>  */}
               <label className="form-label"> Date & Time:</label>
               <input type="text" className="form-input" onChange={handleChange} name ="date_time" value={eventData.date_time} required/>
               <button type='button' className='form-button' onClick={handlePrevStep}>
@@ -187,18 +206,7 @@ function AddEventForm({handleAddEvent, isLoggedIn}) {
                 <span className='bottom-key-2'></span>
               </button>
         </div> 
-        <div>
-                <label className='form-label'>Image:</label>
-                <div className='file-input-container'>
-                  <input
-                    type='file'
-                    className='form-input'
-                    onChange={(e) => setImage(e.target.files[0])}
-                    required
-                  />
-                  <button  type="button" onClick={handleUploadImage}>Upload Image</button>
-                </div>
-              </div>
+
       </>             
       )}
     </form>  

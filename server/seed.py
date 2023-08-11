@@ -9,11 +9,9 @@ with app.app_context():
     User.query.delete()
     Event.query.delete()
     Ticket.query.delete()
-    # Payment.query.delete()
-    # Purchase.query.delete()
 
-    print("Start seeding here...")
-    print("seed events ")
+
+
 
     events = []
     images = [
@@ -43,9 +41,6 @@ with app.app_context():
         events.append(event)
     db.session.add_all(events)
 
-     # ticket_number=randint(1000, 20000),
-
-    print("seed users ")
     users = []
     for n in range(10):
         user = User(
@@ -56,7 +51,6 @@ with app.app_context():
         users.append(user)
     db.session.add_all(users)
 
-    print("seed ticket")
     tickets = []
     for user in users:
         for n in range(10):
@@ -75,16 +69,5 @@ with app.app_context():
         event.ticket = p
         tickets.remove(p)
 
-
-    # combinations = set()
-    # for _ in range(10):
-    #     user_id = randint(1, 10)
-    #     event_id = randint(1, 10)
-    #     if (user_id, event_id) in combinations:
-    #         continue
-    #     combinations.add((user_id, event_id))
-    #     event_user_data = {"user_id": user_id, "event_id": event_id}
-    #     statement = db.insert(event_users).values(event_user_data)
-    #     db.session.execute(statement)
-        db.session.commit()
+    db.session.commit()
    
