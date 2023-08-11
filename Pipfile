@@ -18,6 +18,7 @@ python-dotenv = "*"
 honcho = "*"
 gunicorn = "*"
 psycopg2-binary = "*"
+flask-swagger-ui = "*"
 
 [dev-packages]
 
